@@ -66,10 +66,17 @@ const features = [
 
 
 export function About() {
-  const download = () => {
-    // local pdf
-    const url = 'https://drive.google.com/file/d/1tG8swJGAQ3Upq__8fezvzC7eb6AoUUOK/view?usp=sharing'
+  const download = (en?: boolean) => {
+
+    if (en) {
+      const url = 'https://drive.google.com/file/d/1a9ZxuXRQc_Gjcf6PZXAneIz30oCJj03C/view?usp=sharing'
     window.open(url, '_blank')
+
+    } else {
+      const url = 'https://drive.google.com/file/d/1lH2fPVJ-skJixMbzHTQz5HbTNc4heirr/view?usp=sharing'
+    window.open(url, '_blank')
+
+    }
   }
 
 
@@ -90,7 +97,10 @@ export function About() {
             With years of experience in web development, I specialize in creating robust and scalable applications 
             that not only meet but exceed client expectations.
           </p>
-          <Button onClick={download} variant="outline">Download Resume</Button>
+         <div className="flex gap-4 w-full justify-center">
+         <Button onClick={() => download(true)} variant="outline">Download Resume (English)</Button>
+         <Button onClick={() => download(false)} variant="outline">Download Resume (Portuguese)</Button>
+         </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
