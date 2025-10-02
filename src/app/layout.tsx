@@ -1,13 +1,11 @@
-import "./globals.css";
+import { Header } from "@/components/header";
+import { Loading } from "@/components/loading";
+import { ScrollSmootherComponent } from "@/components/scroll-smoother";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "./providers";
 import { Toaster } from "../components/ui/toaster";
-import { ScrollSmootherComponent } from "@/components/scroll-smoother";
-import { Header } from "@/components/header";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggle";
-import {Loading} from "@/components/loading";
-import { cn } from "@/lib/utils";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

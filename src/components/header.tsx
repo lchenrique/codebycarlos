@@ -4,7 +4,6 @@ import { Separator } from "./ui/separator";
 import { cn } from "@/lib/utils";
 import { NavBar } from "./navbar";
 import Image from "next/image";
-import { AnimatedThemeToggler } from "./ui/animated-theme-toggle";
 
 export function Header() {
   const [mounted, setMounted] = useState(false);
