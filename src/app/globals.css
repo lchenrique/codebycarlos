@@ -1,32 +1,70 @@
 @import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 223 47% 11%;
-    --muted-foreground: 212 12%, 72%;
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --ring: 216 34% 17%;
-    --radius: 0.75rem;
-  }
+.share-tech-mono-regular {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
 
+
+@layer base {
+:root {
+  --background: 270 5.5556% 7.0588%;
+  --foreground: 0 0% 75.6863%;
+  --card: 0 0% 7.0588%;
+  --card-foreground: 0 0% 75.6863%;
+  --popover: 270 5.5556% 7.0588%;
+  --popover-foreground: 0 0% 75.6863%;
+  --primary: 22.2973 75.5102% 61.5686%;
+  --primary-foreground: 270 5.5556% 7.0588%;
+  --secondary: 180 17.3913% 45.0980%;
+  --secondary-foreground: 270 5.5556% 7.0588%;
+  --muted: 0 0% 13.3333%;
+  --muted-foreground: 0 0% 53.3333%;
+  --accent: 0 0% 20%;
+  --accent-foreground: 0 0% 75.6863%;
+  --destructive: 180 17.3913% 45.0980%;
+  --destructive-foreground: 270 5.5556% 7.0588%;
+  --border: 0 0% 13.3333%;
+  --input: 0 0% 13.3333%;
+  --ring: 22.2973 75.5102% 61.5686%;
+  --chart-1: 180 17.3913% 45.0980%;
+  --chart-2: 22.2973 75.5102% 61.5686%;
+  --chart-3: 31.2000 92.5926% 78.8235%;
+  --chart-4: 0 0% 53.3333%;
+  --chart-5: 0 0% 60%;
+  --sidebar: 0 0% 7.0588%;
+  --sidebar-foreground: 0 0% 75.6863%;
+  --sidebar-primary: 22.2973 75.5102% 61.5686%;
+  --sidebar-primary-foreground: 270 5.5556% 7.0588%;
+  --sidebar-accent: 0 0% 20%;
+  --sidebar-accent-foreground: 0 0% 75.6863%;
+  --sidebar-border: 0 0% 13.3333%;
+  --sidebar-ring: 22.2973 75.5102% 61.5686%;
+  --font-sans: Geist Mono, ui-monospace, monospace;
+  --font-serif: serif;
+  --font-mono: JetBrains Mono, monospace;
+  --radius: 0.75rem;
+  --shadow-2xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
+  --shadow-xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
+  --shadow-sm: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+  --shadow: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+  --shadow-md: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 2px 4px -1px hsl(0 0% 0% / 0.05);
+  --shadow-lg: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 4px 6px -1px hsl(0 0% 0% / 0.05);
+  --shadow-xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 8px 10px -1px hsl(0 0% 0% / 0.05);
+  --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
+}
+
+
+body {
+  letter-spacing: var(--tracking-normal);
+}
   *{
     @apply border-border;
   }
@@ -130,3 +168,77 @@
   /* filter: blur(10px); */
 }
 
+
+.fade-border {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px; /* opcional, para cantos arredondados */
+}
+
+.fade-border img {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  /* Máscara para borda fade */
+  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: cover;
+
+  mask-image: radial-gradient(circle, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: cover;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+
+@property --num {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+.loader {
+  animation: counter 5s ease-in-out forwards; 
+  counter-reset: num var(--num);
+  font: 800 40px system-ui;
+  padding: 2rem;
+}
+.loader::before {
+  content: counter(num);
+}
+
+@keyframes counter {
+  from {
+    --num: 0;
+  }
+  to {
+    --num: 100;
+  }
+}
+
+.loader-bar {
+  width: 0%;
+  transition: width 5s ease-in-out;
+  height: 0.5rem;
+  background: hsl(var(--primary));
+  border-radius: 0.25rem;
+  animation: progress 5s ease-in-out forwards;
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}

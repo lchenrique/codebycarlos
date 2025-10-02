@@ -8,7 +8,6 @@ import { Header } from '@/components/header';
 export default function Home() {
   return (
     <main id="home"  className="min-h-screen bg-background">
-      <Header />
       <Hero />
       <About />
       <Skills />

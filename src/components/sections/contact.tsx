@@ -1,123 +1,125 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef } from 'react';
 import { SectionHeading } from '../section-heading';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
-import { MailIcon, MessageSquareIcon, UserIcon, SendIcon } from 'lucide-react';
-import ContactEmail from '../templates/email';
+import { Mail, Phone, Linkedin, Github, MessageCircle } from 'lucide-react';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register GSAP plugins
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export function Contact() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const contactRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    const formData = new FormData(e.target as HTMLFormElement);
-    console.log(formData);
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const message = formData.get('message') as string;
-    const date = new Date();
-    // send via api
-    const  data = await fetch('/api/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, message, date }),
-    })
+  useGSAP(() => {
+    if (!contactRef.current) return;
 
-  if (!data.ok) {
-      toast({
-        title: 'Error sending message',
-        description: 'There was an error sending your message. Please try again later.',
-      });
-      setIsSubmitting(false);
-      return;
-    }
-    toast({
-      title: 'Message sent!',
-      description: 'Thank you for reaching out. I\'ll get back to you soon.',
+    // Initial states
+    gsap.set([headingRef.current, buttonsRef.current], {
+      opacity: 0,
+      y: 30
     });
 
-    setIsSubmitting(false);
-    // (e.target as HTMLFormElement).reset();
+    // Animate heading
+    gsap.to(headingRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: contactRef.current,
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    // Animate buttons
+    gsap.to(buttonsRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      delay: 0.2,
+      scrollTrigger: {
+        trigger: contactRef.current,
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
+    });
+    
+    // Refresh ScrollTrigger after animations are set up
+    ScrollTrigger.refresh();
+  }, []);
+
+  // Function to handle WhatsApp click
+  const handleWhatsAppClick = () => {
+    // Replace with your WhatsApp number in international format (only numbers)
+    // Example: 5511999999999 for Brazil
+    window.open('https://wa.me/5521981686736', '_blank');
+  };
+
+  // Function to handle LinkedIn click
+  const handleLinkedInClick = () => {
+    // Replace with your LinkedIn profile URL
+    window.open('https://www.linkedin.com/in/lc-henrique', '_blank');
+  };
+
+  // Function to handle email click
+  const handleEmailClick = () => {
+    // Replace with your email address
+    window.location.href = 'mailto:lc.henriquee@gmail.com';
   };
 
   return (
-    <section id="contact" className="py-40 gradient-bg">
+    <section ref={contactRef} id="contact" className="py-80 ">
       <div className="w-full px-4 max-w-7xl mx-auto">
-        <SectionHeading
-          title="Get in Touch"
-          subtitle="Have a project in mind? Let's talk about it."
-        />
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-md mx-auto space-y-6 bg-card p-8 rounded-xl shadow-2xl animate-slide-up"
-        >
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium">
-              Name
-            </label>
-            <div className="relative group">
-              <UserIcon className="absolute left-3 top-3 h-5 w-5 text-muted-foreground transition-colors duration-300 group-focus-within:text-primary" />
-              <Input
-                name="name"
-                placeholder="Your name"
-                required
-                className="pl-10 transition-all duration-300 focus:ring-2 focus:ring-primary"
-              />
-            </div>
+        <div ref={headingRef}>
+          <SectionHeading
+            title="Get in Touch"
+            subtitle="Have a project in mind? Let's talk about it."
+          />
+        </div>
+        <div ref={buttonsRef} className="max-w-md  mx-auto space-y-6 bg-muted p-8 rounded-xl shadow-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button 
+              onClick={handleWhatsAppClick}
+              className="w-full h-20 flex flex-col gap-2 group transition-all duration-300 hover:scale-105"
+              variant="outline"
+            >
+              <MessageCircle className="h-6 w-6 group-hover:text-green-500 transition-colors" />
+              <span>WhatsApp</span>
+            </Button>
+            
+            <Button 
+              onClick={handleLinkedInClick}
+              className="w-full h-20 flex flex-col gap-2 group transition-all duration-300 hover:scale-105"
+              variant="outline"
+            >
+              <Linkedin className="h-6 w-6 group-hover:text-blue-600 transition-colors" />
+              <span>LinkedIn</span>
+            </Button>
+            
+            <Button 
+              onClick={handleEmailClick}
+              className="w-full h-20 flex flex-col gap-2 group transition-all duration-300 hover:scale-105"
+              variant="outline"
+            >
+              <Mail className="h-6 w-6 group-hover:text-red-500 transition-colors" />
+              <span>Email</span>
+            </Button>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-            <div className="relative group">
-              <MailIcon className="absolute left-3 top-3 h-5 w-5 text-muted-foreground transition-colors duration-300 group-focus-within:text-primary" />
-              <Input
-                name="email"
-                type="email"
-                placeholder="your@email.com"
-                required
-                className="pl-10 transition-all duration-300 focus:ring-2 focus:ring-primary"
-              />
-            </div>
+          
+          <div className="text-center text-muted-foreground text-sm pt-4">
+            <p>Feel free to reach out through any of these channels</p>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="message" className="text-sm font-medium">
-              Message
-            </label>
-            <div className="relative group">
-              <MessageSquareIcon className="absolute left-3 top-3 h-5 w-5 text-muted-foreground transition-colors duration-300 group-focus-within:text-primary" />
-              <Textarea
-                name="message"
-                placeholder="Your message"
-                required
-                className="min-h-[120px] pl-10 transition-all duration-300 focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
-          <Button
-            type="submit"
-            className="w-full group transition-all duration-300 hover:scale-105"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              'Sending...'
-            ) : (
-              <>
-                Send Message
-                <SendIcon className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </>
-            )}
-          </Button>
-        </form>
+        </div>
       </div>
     </section>
   );

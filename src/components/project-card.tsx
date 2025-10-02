@@ -24,8 +24,8 @@ export function ProjectCard({ title, description, images, technologies, liveUrl,
         <PhotoProvider>
           <div className="cursor-pointer flex itemms-center justify-center ">
             <div className="absolute pointer-events-none inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <PhotoView key={images[0].src} src={images[0].src}>
-              <img src={images[0].src} />
+            <PhotoView key={images[0]?.src} src={images[0]?.src}>
+              <img src={images[0]?.src} />
             </PhotoView>
             {images.slice(1).map((item, index) => (
               <PhotoView key={item.src} src={item.src} />
