@@ -15,7 +15,7 @@ export function Loading() {
   const timer =  setTimeout(() => {
       setProgress(100)
       handleComplete()
-    }, 700)
+    }, 1000)
     return () => clearTimeout(timer)
   }, [])
 
