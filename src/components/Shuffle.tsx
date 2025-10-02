@@ -350,7 +350,6 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
   const baseTw = 'inline-block whitespace-normal break-words will-change-transform uppercase text-[2.5rem] md:text-[4rem] leading-none';
   const commonStyle: React.CSSProperties = {
-    textAlign,
     fontFamily: `'Orbitron', sans-serif`,
     ...style
   };

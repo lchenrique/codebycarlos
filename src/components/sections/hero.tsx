@@ -156,9 +156,9 @@ export function Hero() {
           "inset-x-0 inset-y-[-10%]  h-[250%] -skew-y-12",
         )}
       />
-      <div className="flex md:items-start justify-center items-center flex-col p-30">
+      <div className="flex md:items-start justify-center items-center flex-col p-10">
         <div ref={nameRef} className="flex gap-1 text-7xl funnel-display opacity-0 translate-y-10">
-          <BlurFade delay={0.55} inView>
+          <BlurFade delay={0.55} inView >
             <Shuffle
               text="Carlos Henrique"
               shuffleDirection="right"
@@ -171,6 +171,7 @@ export function Hero() {
               triggerOnce={true}
               triggerOnHover={true}
               respectReducedMotion={true}
+              className="text-center md:text-left"
             />
 
           </BlurFade>
@@ -207,7 +208,7 @@ export function Hero() {
           </Button>
         </div>
       </div>
-      <div ref={profileRef} className="relative hidden lg:block opacity-0 scale-75">
+      <div ref={profileRef} className="relative hidden lg:block opacity-0 scale-75 ">
         <div className="h-[500px] w-[500px] flex items-center justify-center overflow-hidden relative z-10">
           <ShapeBlur
             className="w-[200px] h-[200px] z-30"
