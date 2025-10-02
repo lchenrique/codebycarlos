@@ -144,7 +144,7 @@ export function Hero() {
  
 
   return (
-    <section ref={heroRef} className="min-h-screen px-10 md:px-0 flex items-center justify-evenly w-full relative pt-16  overflow-hidden">
+    <section ref={heroRef} className="min-h-screen    px-10 flex items-center justify-evenly w-full relative pt-16  overflow-hidden">
       {/* <Particles className="absolute inset-0 z-0" /> */}
       {/* <Meteors /> */}
       <InteractiveGridPattern
