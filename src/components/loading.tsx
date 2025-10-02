@@ -12,8 +12,11 @@ export function Loading() {
   }
 
   useEffect(() => {
-    setProgress(100)
-    handleComplete()
+  const timer =  setTimeout(() => {
+      setProgress(100)
+      handleComplete()
+    }, 700)
+    return () => clearTimeout(timer)
   }, [])
 
   if (!isVisible) return null
