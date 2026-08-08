@@ -24,6 +24,7 @@ export function About() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     gsap.fromTo(q(".about-reveal"), { yPercent: 115, autoAlpha: 0 }, {
       yPercent: 0,

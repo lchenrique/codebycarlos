@@ -15,6 +15,7 @@ const links = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   const { locale, theme, t, toggleLocale, toggleTheme } = useSiteSettings();
 
   useEffect(() => {
@@ -24,16 +25,40 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const sections = ["home", "about", "projects", "contact"]
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target.id) setActiveSection(visible.target.id);
+    }, { rootMargin: "-28% 0px -58%", threshold: [0, 0.15, 0.35] });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open]);
+
   const goTo = (id: string) => {
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     if (id === "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior });
     } else {
       const target = document.getElementById(id);
       if (!target) return;
       const header = document.querySelector(".site-header");
       const offset = header instanceof HTMLElement ? header.offsetHeight + 12 : 24;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+      window.scrollTo({ top: Math.max(0, top), behavior });
     }
 
     window.history.replaceState(null, "", id === "home" ? "/" : `#${id}`);
@@ -48,9 +73,9 @@ export function Header() {
           <span>code by carlos</span>
         </button>
 
-        <nav className="desktop-nav" aria-label="Primary navigation">
+        <nav className="desktop-nav" aria-label={t("primaryNavigation")}>
           {links.map((link, index) => (
-            <button key={link.id} onClick={() => goTo(link.id)} className="nav-link">
+            <button key={link.id} onClick={() => goTo(link.id)} className={cn("nav-link", activeSection === link.id && "is-active")} aria-current={activeSection === link.id ? "location" : undefined}>
               <span className="nav-link__index">0{index + 1}</span>
               {t(link.label)}
             </button>
@@ -80,9 +105,9 @@ export function Header() {
         </button>
       </div>
 
-      <div className={cn("mobile-menu", open && "is-open")}>
+      <div className={cn("mobile-menu", open && "is-open")} aria-hidden={!open}>
         {links.map((link, index) => (
-          <button key={link.id} onClick={() => goTo(link.id)} className="mobile-menu__link">
+          <button key={link.id} onClick={() => goTo(link.id)} className={cn("mobile-menu__link", activeSection === link.id && "is-active")} tabIndex={open ? 0 : -1}>
             <span>0{index + 1}</span>
             {t(link.label)}
             <ArrowUpRight size={18} />

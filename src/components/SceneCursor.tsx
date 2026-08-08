@@ -8,7 +8,7 @@ export function SceneCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const cursor = cursorRef.current;
     const ring = ringRef.current;
@@ -18,8 +18,13 @@ export function SceneCursor() {
     const moveY = gsap.quickTo(cursor, "y", { duration: 0.18, ease: "power3" });
     const ringX = gsap.quickTo(ring, "x", { duration: 0.55, ease: "power3" });
     const ringY = gsap.quickTo(ring, "y", { duration: 0.55, ease: "power3" });
+    let isVisible = false;
 
     const handleMove = (event: MouseEvent) => {
+      if (!isVisible) {
+        gsap.set([cursor, ring], { autoAlpha: 1 });
+        isVisible = true;
+      }
       moveX(event.clientX);
       moveY(event.clientY);
       ringX(event.clientX);
@@ -45,12 +50,19 @@ export function SceneCursor() {
       }
     };
 
+    const handleLeave = () => {
+      gsap.set([cursor, ring], { autoAlpha: 0 });
+      isVisible = false;
+    };
+
     window.addEventListener("mousemove", handleMove);
+    document.documentElement.addEventListener("mouseleave", handleLeave);
     document.addEventListener("mouseover", handleOver);
     document.addEventListener("mouseout", handleOut);
 
     return () => {
       window.removeEventListener("mousemove", handleMove);
+      document.documentElement.removeEventListener("mouseleave", handleLeave);
       document.removeEventListener("mouseover", handleOver);
       document.removeEventListener("mouseout", handleOut);
     };

@@ -105,6 +105,7 @@ export function Projects() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     gsap.fromTo(q(".projects-intro"), { y: 50, autoAlpha: 0 }, {
       y: 0,
@@ -114,17 +115,24 @@ export function Projects() {
       scrollTrigger: { trigger: root, start: "top 72%" },
     });
 
-    q(".project-card").forEach((element, index) => {
+    q(".project-card").forEach((element) => {
       const card = element as HTMLElement;
+      const media = card.querySelector(".project-media");
       const image = card.querySelector(".project-media__image");
-      gsap.fromTo(card, { y: 70, autoAlpha: 0 }, {
-        y: 0,
-        autoAlpha: 1,
-        duration: 1.1,
-        delay: (index % 2) * 0.12,
-        ease: "power4.out",
-        scrollTrigger: { trigger: card, start: "top 84%" },
+      const curtain = card.querySelector(".project-media__curtain");
+      const hud = card.querySelector(".project-media__hud");
+
+      const reveal = gsap.timeline({
+        scrollTrigger: { trigger: card, start: "top 86%" },
+        defaults: { ease: "power4.out" },
       });
+
+      reveal
+        .fromTo(card, { y: 72, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.05 })
+        .fromTo(media, { clipPath: "inset(8% 0 8% 0)" }, { clipPath: "inset(0% 0 0% 0)", duration: 1.15 }, 0.08)
+        .to(curtain, { scaleY: 0, duration: 1.05, ease: "expo.inOut" }, 0.12)
+        .fromTo(hud, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.8);
+
       if (image) {
         gsap.fromTo(image, { yPercent: -8, scale: 1.1 }, {
           yPercent: 8,
@@ -162,7 +170,12 @@ export function Projects() {
               </div>
               <PhotoProvider>
                 <PhotoView src={project.image.src}>
-                  <div className="project-media" data-cursor="view">
+                  <button
+                    type="button"
+                    className="project-media"
+                    data-cursor="view"
+                    aria-label={locale === "pt" ? `Abrir galeria do projeto ${project.title}` : `Open ${project.title} project gallery`}
+                  >
                     <Image
                       src={project.image}
                       alt={`${project.title} project interface`}
@@ -170,9 +183,15 @@ export function Projects() {
                       sizes={index === 0 || index === 3 ? "(max-width: 768px) 100vw, 65vw" : "(max-width: 768px) 100vw, 35vw"}
                       className="project-media__image"
                     />
+                    <span className="project-media__curtain" aria-hidden="true" />
                     <div className="project-media__veil" />
+                    <span className="project-media__hud" aria-hidden="true">
+                      <span>SC {project.index} / TAKE 01</span>
+                      <span>REC <i /> 00:{String(index * 7 + 3).padStart(2, "0")}:24</span>
+                    </span>
+                    <span className="project-media__corners" aria-hidden="true" />
                     <span className="project-media__view">{t("openCase")} <ArrowUpRight size={16} /></span>
-                  </div>
+                  </button>
                 </PhotoView>
                 {project.gallery.slice(1).map((image) => <PhotoView key={image.src} src={image.src} />)}
               </PhotoProvider>

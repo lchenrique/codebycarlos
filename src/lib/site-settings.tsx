@@ -12,6 +12,7 @@ export const messages: Record<Locale, Messages> = {
     navAbout: "About",
     navWork: "Selected work",
     navContact: "Contact",
+    primaryNavigation: "Primary navigation",
     backTop: "Back to top",
     openMenu: "Open menu",
     closeMenu: "Close menu",
@@ -73,11 +74,19 @@ export const messages: Record<Locale, Messages> = {
     current: "currently available",
     contactSunOne: "let's make",
     contactSunTwo: "something",
+    sceneAria: "Transition to selected work",
+    sceneKicker: "Intermission / scene four",
+    sceneTitleOne: "From",
+    sceneTitleTwo: "idea",
+    sceneTitleThree: "to impact.",
+    sceneMetaOne: "Direction / design / development",
+    sceneMetaTwo: "Every frame earns its place",
   },
   pt: {
     navAbout: "Sobre",
     navWork: "Trabalhos",
     navContact: "Contato",
+    primaryNavigation: "Navegação principal",
     backTop: "Voltar ao topo",
     openMenu: "Abrir menu",
     closeMenu: "Fechar menu",
@@ -139,6 +148,13 @@ export const messages: Record<Locale, Messages> = {
     current: "disponível no momento",
     contactSunOne: "vamos criar",
     contactSunTwo: "algo",
+    sceneAria: "Transição para os trabalhos selecionados",
+    sceneKicker: "Interlúdio / cena quatro",
+    sceneTitleOne: "Da",
+    sceneTitleTwo: "ideia",
+    sceneTitleThree: "ao impacto.",
+    sceneMetaOne: "Direção / design / desenvolvimento",
+    sceneMetaTwo: "Cada quadro tem uma intenção",
   },
 };
 
@@ -160,11 +176,23 @@ export function SiteSettingsProvider({ children }: { children: React.ReactNode }
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const storedLocale = window.localStorage.getItem("codebycarlos-locale");
-    const storedTheme = window.localStorage.getItem("codebycarlos-theme");
-    if (storedLocale === "en" || storedLocale === "pt") setLocale(storedLocale);
-    if (storedTheme === "dark" || storedTheme === "light") setTheme(storedTheme);
-    setReady(true);
+    const frame = window.requestAnimationFrame(() => {
+      const storedLocale = window.localStorage.getItem("codebycarlos-locale");
+      const storedTheme = window.localStorage.getItem("codebycarlos-theme");
+      if (storedLocale === "en" || storedLocale === "pt") {
+        setLocale(storedLocale);
+      } else if (window.navigator.language.toLowerCase().startsWith("pt")) {
+        setLocale("pt");
+      }
+      if (storedTheme === "dark" || storedTheme === "light") {
+        setTheme(storedTheme);
+      } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+        setTheme("light");
+      }
+      setReady(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {

@@ -19,13 +19,25 @@ export function Hero() {
     if (!root) return;
     const q = gsap.utils.selector(root);
 
-    const intro = gsap.timeline({ delay: 1.22, defaults: { ease: "power4.out" } });
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      gsap.set(q(".hero-kicker, .hero-line, .hero-copy, .hero-orbit, .hero-footer"), { autoAlpha: 1, y: 0, yPercent: 0, scale: 1, rotation: 0, skewY: 0 });
+      gsap.set(q(".hero-letterbox"), { scaleY: 0 });
+      return;
+    }
+
+    const intro = gsap.timeline({ paused: true, defaults: { ease: "power4.out" } });
     intro
+      .to(q(".hero-letterbox"), { scaleY: 0, duration: 1.1, ease: "expo.inOut" })
       .fromTo(q(".hero-kicker"), { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9 })
       .fromTo(q(".hero-line"), { yPercent: 120, skewY: 6 }, { yPercent: 0, skewY: 0, duration: 1.35, stagger: 0.08 }, "-=0.45")
       .fromTo(q(".hero-copy"), { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9 }, "-=0.65")
       .fromTo(q(".hero-orbit"), { scale: 0.65, autoAlpha: 0, rotation: -20 }, { scale: 1, autoAlpha: 1, rotation: 0, duration: 1.6, ease: "expo.out" }, "-=1.15")
       .fromTo(q(".hero-footer"), { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, "-=0.75");
+
+    const playIntro = () => intro.play(0);
+    if (document.body.dataset.intro === "complete") playIntro();
+    else window.addEventListener("codebycarlos:intro-complete", playIntro, { once: true });
 
     gsap.to(q(".hero-orbit__spin"), { rotation: 360, duration: 24, repeat: -1, ease: "none" });
     gsap.to(q(".hero-orbit__image"), { y: -14, duration: 3.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
@@ -42,6 +54,8 @@ export function Hero() {
       .to(q(".hero-grid"), { yPercent: 18, scale: 1.12, ease: "none" }, 0)
       .to(q(".hero-orbit"), { yPercent: 34, rotation: 12, ease: "none" }, 0)
       .to(q(".hero-ghost"), { xPercent: -12, opacity: 0.28, ease: "none" }, 0);
+
+    return () => window.removeEventListener("codebycarlos:intro-complete", playIntro);
   }, { scope: heroRef });
 
   useEffect(() => {
@@ -91,12 +105,19 @@ export function Hero() {
       <div className="hero-glow hero-glow--one" aria-hidden="true" />
       <div className="hero-glow hero-glow--two" aria-hidden="true" />
       <div className="hero-vignette" aria-hidden="true" />
+      <div className="hero-letterbox hero-letterbox--top" aria-hidden="true" />
+      <div className="hero-letterbox hero-letterbox--bottom" aria-hidden="true" />
 
       <div className="hero-stage page-gutter">
         <div className="hero-kicker mono-label">
           <span>01 / 05</span>
           <span className="hero-kicker__line" />
           <span>{t("heroKicker")}</span>
+        </div>
+
+        <div className="hero-timecode mono-label" aria-hidden="true">
+          <span>REC</span>
+          <span>00:00:01</span>
         </div>
 
         <div className="hero-main">

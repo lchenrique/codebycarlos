@@ -32,6 +32,7 @@ export function Skills() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     gsap.fromTo(q(".skills-heading"), { y: 50, autoAlpha: 0 }, {
       y: 0,
