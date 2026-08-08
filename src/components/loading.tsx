@@ -1,55 +1,43 @@
-'use client'
+"use client";
 
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useSiteSettings } from "@/lib/site-settings";
+import { useEffect, useState } from "react";
 
 export function Loading() {
-  const [isVisible, setIsVisible] = useState(true)      // ainda no DOM
-  const [isAnimating, setIsAnimating] = useState(false) // controla o slide-up
-  const [progress, setProgress] = useState(0)
-
-  const handleComplete = () => {
-    setIsAnimating(true)
-  }
+  const [progress, setProgress] = useState(0);
+  const [leaving, setLeaving] = useState(false);
+  const { t } = useSiteSettings();
 
   useEffect(() => {
-  const timer =  setTimeout(() => {
-      setProgress(100)
-      handleComplete()
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [])
+    const started = performance.now();
+    let frame = 0;
 
-  if (!isVisible) return null
+    const tick = (now: number) => {
+      const next = Math.min(100, Math.round(((now - started) / 1100) * 100));
+      setProgress(next);
+      if (next < 100) frame = requestAnimationFrame(tick);
+      else window.setTimeout(() => setLeaving(true), 180);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
-    <div
-      className={`fixed inset-0 z-[999999] flex items-center justify-center bg-background backdrop-blur-sm
-        transition-transform duration-1000
-        ${isAnimating ? '-translate-y-full' : 'translate-y-0'}
-      `}
-      // quando a animação terminar, removemos do DOM
-      onTransitionEnd={() => {
-        if (isAnimating) {
-          setIsVisible(false)
-          setProgress(100)
-        }
-      }}
-    >
-      <div className="flex flex-col items-center space-y-6">
-        <div className="loading-page">
-          <div className="flex flex-col items-center">
-            <p>loading</p>
-            {!progress && <div className="loader w-[160px]  text-center ">%</div>}
-            {!!progress && <div className=" w-[160px]  text-center "
-              style={{
-                font: "800 40px system-ui",
-                padding: "2rem"
-              }}
-            >100%</div>}
-            <div className="h-2 bg-primary loader-bar" />
-          </div>
-        </div>
+    <div className={`loading-screen ${leaving ? "is-leaving" : ""}`} aria-hidden={leaving}>
+      <div className="loading-screen__top">
+        <span>CH / 2026</span>
+        <span>{t("loadingDigital")}</span>
+      </div>
+      <div className="loading-screen__center">
+        <span className="loading-screen__eyebrow">{t("loadingStudio")}</span>
+        <strong>{progress}%</strong>
+        <div className="loading-screen__line"><span style={{ transform: `scaleX(${progress / 100})` }} /></div>
+      </div>
+      <div className="loading-screen__bottom">
+        <span>{t("loadingLocation")}</span>
+        <span>{t("loadingPlease")}</span>
       </div>
     </div>
-  )
+  );
 }

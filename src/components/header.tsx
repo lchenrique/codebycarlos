@@ -1,63 +1,94 @@
-"use client"
-import { useState, useEffect } from "react";
-import { Separator } from "./ui/separator";
+"use client";
+
 import { cn } from "@/lib/utils";
-import { NavBar } from "./navbar";
+import { useSiteSettings } from "@/lib/site-settings";
+import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const links = [
+  { id: "about", label: "navAbout" as const },
+  { id: "projects", label: "navWork" as const },
+  { id: "contact", label: "navContact" as const },
+];
 
 export function Header() {
-  const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { locale, theme, t, toggleLocale, toggleTheme } = useSiteSettings();
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  if (!mounted) return null;
-
-  // Função para lidar com o clique nos links do header
-  const handleHeaderLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    e.preventDefault();
-    
-    // Usar ScrollSmoother para rolar até a seção
-    const smoother = typeof window !== 'undefined' ? (window as any).ScrollSmootherInstance : null;
-    if (smoother) {
-      // Se for a seção home, rolar para o topo
-      if (targetId === 'home') {
-        smoother.scrollTop(0, true);
-      } else {
-        smoother.scrollTo(`#${targetId}`, true);
-      }
+  const goTo = (id: string) => {
+    if (id === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      // Fallback caso o ScrollSmoother não esteja disponível
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-      }
+      const target = document.getElementById(id);
+      if (!target) return;
+      const header = document.querySelector(".site-header");
+      const offset = header instanceof HTMLElement ? header.offsetHeight + 12 : 24;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
     }
-    
-    // Atualizar a URL
-    window.history.pushState(null, '', targetId === 'home' ? '#' : `#${targetId}`);
+
+    window.history.replaceState(null, "", id === "home" ? "/" : `#${id}`);
+    setOpen(false);
   };
 
   return (
-    <>
-      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b">
-        <div className="container mx-auto px-4 h-16 gap-4 flex items-center justify-center md:justify-between">
-          <a
-            href="#home"
-            className="text-lg font-bold flex items-center gap-2 "
-            onClick={(e) => handleHeaderLinkClick(e, 'home')}
-          >
-            <Image alt="" src="/logo.svg" width={20} height={20} />    
-            <span className="funnel-display"> Code by Carlos</span>
-          </a>
-          <nav className=" gap-6 item hidden md:flex">
-            <NavBar />
-          
-          </nav>
+    <header className={cn("site-header", scrolled && "is-scrolled")}>
+      <div className="site-header__inner">
+        <button className="brand" onClick={() => goTo("home")} aria-label={t("backTop")}>
+          <Image src="/logo.svg" alt="" width={22} height={22} priority />
+          <span>code by carlos</span>
+        </button>
+
+        <nav className="desktop-nav" aria-label="Primary navigation">
+          {links.map((link, index) => (
+            <button key={link.id} onClick={() => goTo(link.id)} className="nav-link">
+              <span className="nav-link__index">0{index + 1}</span>
+              {t(link.label)}
+            </button>
+          ))}
+        </nav>
+
+        <div className="header-actions">
+          <div className="header-status">
+            <span className="status-dot" />
+            <span>{t("available")}</span>
+          </div>
+          <button className="header-control locale-control" onClick={toggleLocale} aria-label={t("languageSwitch")}>
+            <span>{locale === "en" ? "PT" : "EN"}</span>
+          </button>
+          <button className="header-control theme-control" onClick={toggleTheme} aria-label={t(theme === "dark" ? "useLight" : "useDark")}>
+            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
         </div>
-      </header>
-      <nav className=" gap-6 item flex items-center justify-between w-screen bg- md:hidden fixed bottom-0 z-[999] bg-background/80 backdrop-blur-lg border-t  h-16 ">
-        <NavBar />
-      </nav>
-    </>
+
+        <button
+          className="mobile-menu-button"
+          onClick={() => setOpen((value) => !value)}
+          aria-label={open ? t("closeMenu") : t("openMenu")}
+          aria-expanded={open}
+        >
+          {open ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
+      <div className={cn("mobile-menu", open && "is-open")}>
+        {links.map((link, index) => (
+          <button key={link.id} onClick={() => goTo(link.id)} className="mobile-menu__link">
+            <span>0{index + 1}</span>
+            {t(link.label)}
+            <ArrowUpRight size={18} />
+          </button>
+        ))}
+      </div>
+    </header>
   );
 }

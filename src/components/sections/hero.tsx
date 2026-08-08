@@ -1,241 +1,144 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowDownIcon } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import ShapeBlur from "../ShapeBlur";
-import { BlurFade } from "../ui/blur-fade";
-import { InteractiveGridPattern } from "../ui/interactive-grid-pattern";
-import Shuffle from "../Shuffle";
-import { goToSection } from "@/lib/go-to-section";
-// Register GSAP plugins
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useSiteSettings } from "@/lib/site-settings";
+
+if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
-  
-  const heroRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<HTMLAnchorElement>(null);
-  
+  const heroRef = useRef<HTMLElement>(null);
+  const { locale, t } = useSiteSettings();
 
   useGSAP(() => {
-    if (!heroRef.current) return;
+    const root = heroRef.current;
+    if (!root) return;
+    const q = gsap.utils.selector(root);
 
-    // Initial states
-    gsap.set([nameRef.current, titleRef.current, descriptionRef.current, buttonsRef.current, profileRef.current, arrowRef.current], {
-      opacity: 0,
-    });
+    const intro = gsap.timeline({ delay: 1.22, defaults: { ease: "power4.out" } });
+    intro
+      .fromTo(q(".hero-kicker"), { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9 })
+      .fromTo(q(".hero-line"), { yPercent: 120, skewY: 6 }, { yPercent: 0, skewY: 0, duration: 1.35, stagger: 0.08 }, "-=0.45")
+      .fromTo(q(".hero-copy"), { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9 }, "-=0.65")
+      .fromTo(q(".hero-orbit"), { scale: 0.65, autoAlpha: 0, rotation: -20 }, { scale: 1, autoAlpha: 1, rotation: 0, duration: 1.6, ease: "expo.out" }, "-=1.15")
+      .fromTo(q(".hero-footer"), { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, "-=0.75");
 
-    // Name animation
-    gsap.to(nameRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 2,
-      ease: "power2.out",
+    gsap.to(q(".hero-orbit__spin"), { rotation: 360, duration: 24, repeat: -1, ease: "none" });
+    gsap.to(q(".hero-orbit__image"), { y: -14, duration: 3.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+    gsap.timeline({
       scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
+        trigger: root,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.2,
+      },
+    })
+      .to(q(".hero-stage"), { yPercent: -15, scale: 0.94, ease: "none" }, 0)
+      .to(q(".hero-grid"), { yPercent: 18, scale: 1.12, ease: "none" }, 0)
+      .to(q(".hero-orbit"), { yPercent: 34, rotation: 12, ease: "none" }, 0)
+      .to(q(".hero-ghost"), { xPercent: -12, opacity: 0.28, ease: "none" }, 0);
+  }, { scope: heroRef });
 
-    // Title animation
-    gsap.to(titleRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 3,
-      ease: "power2.out",
-      delay: 0.2,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Description animation
-    gsap.to(descriptionRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 3,
-      ease: "power2.out",
-      delay: 0.4,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Buttons animation
-    gsap.to(buttonsRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 3,
-      ease: "power2.out",
-      delay: 0.6,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Profile image animation
-    gsap.to(profileRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 4,
-      ease: "elastic.out(1, 0.3)",
-      delay: 0.8,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Arrow animation
-    gsap.to(arrowRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      delay: 1,
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Continuous floating animation for profile image
-    gsap.to(profileRef.current, {
-      y: -20,
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut"
-    });
-
-    // Refresh ScrollTrigger after animations are set up
-    ScrollTrigger.refresh();
-  }, []);
-
-  // on mount go to section if hash is in the url
   useEffect(() => {
-    if (window.location.hash) {
-      setTimeout(() => {
-        goToSection(null, window.location.hash.replace("#", ""));
-      }, 1000);
-    }
+    const root = heroRef.current;
+    const orbit = root?.querySelector<HTMLElement>(".hero-orbit");
+    const photo = root?.querySelector<HTMLImageElement>(".hero-orbit__image img");
+    const shine = root?.querySelector<HTMLElement>(".hero-orbit__image-shine");
+
+    if (!root || !orbit || !photo || !shine || !window.matchMedia("(hover: hover)").matches) return;
+
+
+
+
+    const handleMove = (event: MouseEvent) => {
+      const bounds = orbit.getBoundingClientRect();
+      const x = Math.max(-0.5, Math.min(0.5, (event.clientX - bounds.left) / bounds.width - 0.5));
+      const y = Math.max(-0.5, Math.min(0.5, (event.clientY - bounds.top) / bounds.height - 0.5));
+
+      photo.style.transform = `translate3d(${x * 7}px, ${y * 7}px, 0) scale(1.06)`;
+
+      shine.style.setProperty("--pointer-x", `${50 + x * 70}%`);
+      shine.style.setProperty("--pointer-y", `${50 + y * 70}%`);
+      orbit.classList.add("is-hovered");
+    };
+
+    const handleLeave = () => {
+      photo.style.transform = "";
+
+      shine.style.setProperty("--pointer-x", "50%");
+      shine.style.setProperty("--pointer-y", "50%");
+      orbit.classList.remove("is-hovered");
+    };
+
+    orbit.addEventListener("mousemove", handleMove);
+    orbit.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      orbit.removeEventListener("mousemove", handleMove);
+      orbit.removeEventListener("mouseleave", handleLeave);
+
+    };
   }, []);
- 
 
   return (
-    <section ref={heroRef} className="min-h-screen flex items-center justify-evenly w-full relative pt-16  overflow-hidden">
-      {/* <Particles className="absolute inset-0 z-0" /> */}
-      {/* <Meteors /> */}
-      <InteractiveGridPattern
-        width={80}
-        height={80}
-        squares={[30, 30]}
-        className={cn(
-          "[mask-image:radial-gradient(1000px,white,transparent)]",
-          "inset-x-0 inset-y-[-10%]  h-[250%] -skew-y-12",
-        )}
-      />
-      <div className="flex md:items-start justify-center items-center flex-col p-10">
-        <div ref={nameRef} className="flex gap-1 text-7xl funnel-display opacity-0 translate-y-10">
-          <BlurFade delay={0.55} inView >
-            <Shuffle
-              text="Carlos Henrique"
-              shuffleDirection="right"
-              duration={1}
-              animationMode="evenodd"
-              shuffleTimes={1}
-              ease="power3.out"
-              stagger={0.03}
-              threshold={0.1}
-              triggerOnce={true}
-              triggerOnHover={true}
-              respectReducedMotion={true}
-              className="text-center md:text-left"
-            />
+    <section ref={heroRef} className="hero-section" aria-label="Introduction">
+      <div className="hero-grid" aria-hidden="true" />
+      <div className="hero-glow hero-glow--one" aria-hidden="true" />
+      <div className="hero-glow hero-glow--two" aria-hidden="true" />
+      <div className="hero-vignette" aria-hidden="true" />
 
-          </BlurFade>
-
+      <div className="hero-stage page-gutter">
+        <div className="hero-kicker mono-label">
+          <span>01 / 05</span>
+          <span className="hero-kicker__line" />
+          <span>{t("heroKicker")}</span>
         </div>
-        <div ref={titleRef} className="flex gap-4 funnel-display w-full  opacity-0 translate-y-10">
-          <BlurFade delay={0.25 * 2} inView className="w-full">
-            <div
-              className={cn(
-                "share-tech-mono-regular w-full text-2xl text-center md:text-left md:text-4xl font-bold tracking-[6px] md:tracking-[12px] mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-gray-400"
-              )}
-            >
-              Front End Developer
+
+        <div className="hero-main">
+          <div className="hero-copy">
+            <p className="hero-eyebrow">{t("heroEyebrow")}</p>
+            <h1 className="hero-title">
+              <span className="hero-title__line"><span className="hero-line">{t("heroTitleOne")}</span></span>
+              <span className="hero-title__line hero-title__line--offset"><span className="hero-line hero-title__accent">{t("heroTitleTwo")}</span></span>
+              <span className="hero-title__line"><span className="hero-line">{t("heroTitleThree")} <em>{t("heroTitleFour")}</em></span></span>
+            </h1>
+            <div className="hero-copy__bottom">
+              <p>{t("heroDescription")}</p>
+              <a className="circle-link" href="#projects" aria-label={t("heroWork")}>
+                <span>{t("heroSee")}<br />{t("heroWork")}</span>
+                <ArrowDownRight size={17} />
+              </a>
             </div>
-          </BlurFade>
+          </div>
 
         </div>
+          <div className="hero-orbit" aria-hidden="true">
+            <div className="hero-orbit__spin">
+              <span className="hero-orbit__label hero-orbit__label--top">{locale === "pt" ? "movimento / código / sensação" : "motion / code / feeling"}</span>
+              <span className="hero-orbit__label hero-orbit__label--bottom">{locale === "pt" ? "role para explorar · role para explorar ·" : "scroll to explore · scroll to explore ·"}</span>
+              <div className="hero-orbit__ring hero-orbit__ring--outer" />
+              <div className="hero-orbit__ring hero-orbit__ring--inner" />
+            </div>
+            <div className="hero-orbit__image">
+              <Image src="/eu.jpg" alt="Carlos Henrique" fill priority sizes="(max-width: 1024px) 50vw, 420px" />
+              <div className="hero-orbit__image-shine" />
+            </div>
+            <span className="hero-orbit__number">CH<br /><b>01</b></span>
+          </div>
 
-        <p ref={descriptionRef} className="text-xl text-center md:text-left md:text-2xl text-muted-foreground max-w-[600px] my-8 leading-relaxed opacity-0 translate-y-10">
-          Building modern web applications with a focus on user experience and performance
-        </p>
-        <div ref={buttonsRef} className="flex gap-4 flex-wrap justify-center w-full md:w-max opacity-0 translate-y-10">
-          <Button size="lg" className="group transition-all duration-300 hover:scale-105" asChild>
-            <a href="#contact" onClick={(e) => goToSection(e, "contact")}>
-              Get in touch
-              <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
-          </Button>
-          <Button size="lg" variant="outline" className="group transition-all duration-300 hover:scale-105" asChild>
-            <a href="#projects" onClick={(e) => goToSection(e, "projects")}>
-              View my work
-              <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
-          </Button>
+        <div className="hero-footer">
+          <span className="hero-footer__location">{t("heroLocation")} <i>↗</i></span>
+          <span className="hero-footer__scroll"><span className="scroll-line" /> {t("heroScroll")}</span>
+          <a href="#about" className="hero-footer__next">{t("heroNext")} <ArrowUpRight size={15} /></a>
         </div>
       </div>
-      <div ref={profileRef} className="relative hidden lg:block opacity-0 scale-75 ">
-        <div className="h-[500px] w-[500px] flex items-center justify-center overflow-hidden relative z-10">
-          <ShapeBlur
-            className="w-[200px] h-[200px] z-30"
-            variation={0}
-            pixelRatioProp={1}
-            shapeSize={1.8}
-            roundness={0.2}
-            borderSize={.05}
-            circleSize={.5}
-            circleEdge={1}
-            imageUrl="/eu.jpg"
-          />
-        </div>
 
-
-       
-      </div>
-
-      <a
-        ref={arrowRef}
-        href="#about"
-        onClick={(e) => goToSection(e, "about")}
-        className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 opacity-0 translate-y-10 transition-colors duration-300 hover:text-primary cursor-pointer"
-        aria-label="Scroll to About section"
-      >
-        <ArrowDownIcon className="h-8 w-8" />
-      </a>
-    </section >
+      <div className="hero-ghost" aria-hidden="true">feel</div>
+    </section>
   );
 }

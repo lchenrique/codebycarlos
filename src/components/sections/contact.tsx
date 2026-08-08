@@ -1,123 +1,86 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
-import { SectionHeading } from '../section-heading';
-import { Button } from '@/components/ui/button';
-import { Mail, Phone, Linkedin, Github, MessageCircle } from 'lucide-react';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
+import { useRef } from "react";
+import { useSiteSettings } from "@/lib/site-settings";
 
-// Register GSAP plugins
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+
+const socials = [
+  { label: "GitHub", href: "https://github.com/lchenrique", icon: Github },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/lc-henrique", icon: Linkedin },
+  { label: "Email", href: "mailto:lc.henriquee@gmail.com", icon: Mail },
+];
 
 export function Contact() {
-  const contactRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const { t } = useSiteSettings();
 
   useGSAP(() => {
-    if (!contactRef.current) return;
+    const root = sectionRef.current;
+    if (!root) return;
+    const q = gsap.utils.selector(root);
 
-    // Initial states
-    gsap.set([headingRef.current, buttonsRef.current], {
-      opacity: 0,
-      y: 30
-    });
-
-    // Animate heading
-    gsap.to(headingRef.current, {
-      opacity: 1,
+    gsap.fromTo(q(".contact-kicker, .contact-footer"), { y: 32, autoAlpha: 0 }, {
       y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: contactRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
+      autoAlpha: 1,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power4.out",
+      scrollTrigger: { trigger: root, start: "top 72%" },
     });
-
-    // Animate buttons
-    gsap.to(buttonsRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-      delay: 0.2,
-      scrollTrigger: {
-        trigger: contactRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
+    gsap.fromTo(q(".contact-line"), { yPercent: 120, rotate: 3 }, {
+      yPercent: 0,
+      rotate: 0,
+      duration: 1.25,
+      stagger: 0.09,
+      ease: "power4.out",
+      scrollTrigger: { trigger: root, start: "top 68%" },
     });
-    
-    // Refresh ScrollTrigger after animations are set up
-    ScrollTrigger.refresh();
-  }, []);
-
-  // Function to handle WhatsApp click
-  const handleWhatsAppClick = () => {
-    // Replace with your WhatsApp number in international format (only numbers)
-    // Example: 5511999999999 for Brazil
-    window.open('https://wa.me/5521981686736', '_blank');
-  };
-
-  // Function to handle LinkedIn click
-  const handleLinkedInClick = () => {
-    // Replace with your LinkedIn profile URL
-    window.open('https://www.linkedin.com/in/lc-henrique', '_blank');
-  };
-
-  // Function to handle email click
-  const handleEmailClick = () => {
-    // Replace with your email address
-    window.location.href = 'mailto:lc.henriquee@gmail.com';
-  };
+    gsap.to(q(".contact-sun"), {
+      rotation: 360,
+      scale: 1.06,
+      duration: 18,
+      repeat: -1,
+      ease: "none",
+    });
+  }, { scope: sectionRef });
 
   return (
-    <section ref={contactRef} id="contact" className="py-80 ">
-      <div className="w-full px-4 max-w-7xl mx-auto">
-        <div ref={headingRef}>
-          <SectionHeading
-            title="Get in Touch"
-            subtitle="Have a project in mind? Let's talk about it."
-          />
+    <section ref={sectionRef} id="contact" className="contact-section section-acid">
+      <div className="contact-sun" aria-hidden="true"><span>{t("contactSunOne")}<br />{t("contactSunTwo")}</span></div>
+      <div className="page-gutter contact-content">
+        <div className="section-marker section-marker--dark contact-kicker">
+          <span>05 / {t("contact")}</span>
+          <span className="section-marker__rule" />
+          <span>{t("contactSub")}</span>
         </div>
-        <div ref={buttonsRef} className="max-w-md  mx-auto space-y-6 bg-muted p-8 rounded-xl shadow-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button 
-              onClick={handleWhatsAppClick}
-              className="w-full h-20 flex flex-col gap-2 group transition-all duration-300 hover:scale-105"
-              variant="outline"
-            >
-              <MessageCircle className="h-6 w-6 group-hover:text-green-500 transition-colors" />
-              <span>WhatsApp</span>
-            </Button>
-            
-            <Button 
-              onClick={handleLinkedInClick}
-              className="w-full h-20 flex flex-col gap-2 group transition-all duration-300 hover:scale-105"
-              variant="outline"
-            >
-              <Linkedin className="h-6 w-6 group-hover:text-blue-600 transition-colors" />
-              <span>LinkedIn</span>
-            </Button>
-            
-            <Button 
-              onClick={handleEmailClick}
-              className="w-full h-20 flex flex-col gap-2 group transition-all duration-300 hover:scale-105"
-              variant="outline"
-            >
-              <Mail className="h-6 w-6 group-hover:text-red-500 transition-colors" />
-              <span>Email</span>
-            </Button>
+
+        <div className="contact-heading">
+          <span className="line-mask"><span className="contact-line">{t("contactTitleOne")}</span></span>
+          <span className="line-mask"><span className="contact-line contact-heading__muted">{t("contactTitleTwo")}</span></span>
+          <span className="line-mask"><span className="contact-line">{t("contactTitleThree")}</span></span>
+        </div>
+
+        <a className="contact-email" href="mailto:lc.henriquee@gmail.com">
+          <span>lc.henriquee@gmail.com</span>
+          <ArrowUpRight size={28} />
+        </a>
+
+        <div className="contact-footer">
+          <div className="social-links">
+            {socials.map(({ label, href, icon: Icon }) => (
+              <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+                <Icon size={16} />{label}<ArrowUpRight className="social-links__arrow" size={14} />
+              </a>
+            ))}
           </div>
-          
-          <div className="text-center text-muted-foreground text-sm pt-4">
-            <p>Feel free to reach out through any of these channels</p>
+          <div className="contact-footer__meta">
+            <span><i className="status-dot" /> {t("current")}</span>
+            <span>© {new Date().getFullYear()} Carlos Henrique</span>
           </div>
         </div>
       </div>
