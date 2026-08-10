@@ -2,6 +2,7 @@ import { Header } from "@/components/header";
 import { Loading } from "@/components/loading";
 import { SceneCursor } from "@/components/SceneCursor";
 import { CinematicFrame } from "@/components/cinematic-frame";
+import { SkipLink } from "@/components/skip-link";
 import { cn } from "@/lib/utils";
 import { SiteSettingsProvider } from "@/lib/site-settings";
 import type { Metadata } from "next";
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s — Code by Carlos",
   },
   description:
-    "Carlos Henrique creates high-performance digital experiences where interface, motion and code meet.",
+    "Carlos Henrique creates high-performance digital experiences where interface, motion, and code meet.",
   applicationName: "Code by Carlos",
   authors: [{ name: "Carlos Henrique", url: "https://www.codebycarlos.dev" }],
   creator: "Carlos Henrique",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Carlos Henrique — Creative Front-end Developer",
     description:
-      "High-performance digital experiences where interface, motion and code meet.",
+      "High-performance digital experiences where interface, motion, and code meet.",
     url: "/",
     siteName: "Code by Carlos",
     images: [{ url: "/portifolio.png" }],
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Carlos Henrique — Creative Front-end Developer",
-    description: "High-performance digital experiences where interface, motion and code meet.",
+    description: "High-performance digital experiences where interface, motion, and code meet.",
     images: ["/portifolio.png"],
   },
   icons: { icon: "/logo.svg" },
@@ -62,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.className, "bg-background text-foreground antialiased")} suppressHydrationWarning>
         <SiteSettingsProvider>
-          <a className="skip-link" href="#home">Skip to content / Pular para o conteúdo</a>
+          <SkipLink />
           <Loading />
           <Header />
           <SceneCursor />

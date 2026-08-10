@@ -1,12 +1,9 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 import { useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
-
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 export function SceneTransition() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -21,6 +18,7 @@ export function SceneTransition() {
 
     if (reduced) {
       gsap.set(q(".scene-word"), { yPercent: 0 });
+      gsap.set(q(".scene-line--impact"), { overflow: "visible" });
       return;
     }
 
@@ -50,7 +48,8 @@ export function SceneTransition() {
         .fromTo(q(".scene-transition__aperture"), { clipPath: "inset(49% 0 49% 0)" }, { clipPath: "inset(0% 0 0% 0)", duration: 1.1, ease: "power3.inOut" }, 0.35)
         .fromTo(q(".scene-transition__flare"), { xPercent: -160, autoAlpha: 0 }, { xPercent: 160, autoAlpha: 1, duration: 1.65, ease: "power2.inOut" }, 0.2)
         .to(q(".scene-word--one"), { xPercent: -10, autoAlpha: 0.18, duration: 1 }, 1.05)
-        .to(q(".scene-word--three"), { xPercent: 8, color: "#d9ff45", duration: 1 }, 1.05)
+        .set(q(".scene-line--impact"), { overflow: "visible" }, 0.96)
+        .to(q(".scene-word--three"), { xPercent: -2, color: "#d9ff45", duration: 1 }, 1.05)
         .fromTo(q(".scene-transition__meta"), { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7 }, 1.15);
     });
 
@@ -60,7 +59,8 @@ export function SceneTransition() {
         duration: 1,
         stagger: 0.1,
         ease: "power4.out",
-        scrollTrigger: { trigger: root, start: "top 78%" },
+        scrollTrigger: { trigger: root, start: "top 78%", once: true },
+        onComplete: () => gsap.set(q(".scene-line--impact"), { overflow: "visible" }),
       });
     });
 
@@ -84,7 +84,7 @@ export function SceneTransition() {
         <h2 className="scene-transition__heading">
           <span className="scene-line"><span className="scene-word scene-word--one">{t("sceneTitleOne")}</span></span>
           <span className="scene-line"><span className="scene-word scene-word--two">{t("sceneTitleTwo")}</span></span>
-          <span className="scene-line"><span className="scene-word scene-word--three">{t("sceneTitleThree")}</span></span>
+          <span className="scene-line scene-line--impact"><span className="scene-word scene-word--three">{t("sceneTitleThree")}</span></span>
         </h2>
 
         <div className="scene-transition__meta mono-label">

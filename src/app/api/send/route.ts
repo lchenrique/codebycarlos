@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     const safeMessage = escapeHtml(message).replace(/\n/g, '<br />');
     const { data, error } = await resend.emails.send({
       from: 'CodeByCarlos <noreply@codebycarlos.dev>',
-      to: ['lc.henriquee@gmail.com'],
+      to: ['carlos@codebycarlos.dev'],
       replyTo: email,
       subject: `Nova mensagem de ${name}`,
       text: `Nome: ${name}\nE-mail: ${email}\n\n${message}`,

@@ -5,10 +5,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 export type Locale = "en" | "pt";
 export type ThemeMode = "dark" | "light";
 
-type Messages = { [key: string]: string };
-
-export const messages: Record<Locale, Messages> = {
-  en: {
+const enMessages = {
+    skipToContent: "Skip to content",
     navAbout: "About",
     navWork: "Selected work",
     navContact: "Contact",
@@ -16,7 +14,7 @@ export const messages: Record<Locale, Messages> = {
     backTop: "Back to top",
     openMenu: "Open menu",
     closeMenu: "Close menu",
-    available: "Available for select projects",
+    available: "Available for selected projects",
     languageSwitch: "Switch language",
     useLight: "Use light theme",
     useDark: "Use dark theme",
@@ -24,6 +22,7 @@ export const messages: Record<Locale, Messages> = {
     loadingPlease: "please wait",
     loadingLocation: "São Paulo / Brazil",
     loadingDigital: "digital experience design",
+    heroAria: "Introduction",
     heroKicker: "creative front-end developer",
     heroEyebrow: "Interfaces with a pulse.",
     heroTitleOne: "Designing",
@@ -31,10 +30,13 @@ export const messages: Record<Locale, Messages> = {
     heroTitleThree: "for the",
     heroTitleFour: "web.",
     heroDescription: "I turn complex ideas into digital experiences that feel clear, tactile and impossible to ignore.",
+    heroOrbitTop: "motion / code / feeling",
+    heroOrbitBottom: "scroll to explore · scroll to explore ·",
+    heroGhost: "feel",
     heroSee: "see",
     heroWork: "the work",
     heroLocation: "Based in Brazil",
-    heroScroll: "scroll to move",
+    heroScroll: "scroll to explore",
     heroNext: "next chapter",
     aboutMarker: "about",
     aboutSub: "the person behind the pixels",
@@ -45,8 +47,9 @@ export const messages: Record<Locale, Messages> = {
     aboutLead: "I'm Carlos — a front-end developer obsessed with the space between a good idea and the feeling it creates.",
     aboutCopy: "I build thoughtful interfaces, expressive motion systems and reliable products for people who care about the details. The stack changes. The intention doesn't.",
     aboutLink: "Let's make something",
+    portraitAlt: "Carlos Henrique at work",
     portrait: "portrait / 2024",
-    statYears: "years making",
+    statYears: "years creating",
     statProducts: "digital products",
     statCuriosity: "curiosity",
     aboutNote: "Crafted with restraint, precision\nand a little bit of magic.",
@@ -56,13 +59,14 @@ export const messages: Record<Locale, Messages> = {
     toolkitTitleOne: "Technology is",
     toolkitTitleTwo: "the accent.",
     toolkitIntro: "The best tool is the one that makes the idea feel inevitable. I choose the stack around the story, not the other way around.",
+    skillsAria: "Technologies and tools",
     toolkitBottom: "Always learning / always shipping",
     selectedWork: "selected work",
-    selectedWorkSub: "built for the feeling",
+    selectedWorkSub: "made to be felt",
     projectsEyebrow: "A few things I've made",
     projectsTitleOne: "Selected",
     projectsTitleTwo: "frames.",
-    projectsIntro: "Not just screens. Systems, stories and small moments of interaction that stayed with me.",
+    projectsIntro: "Not just screens. Systems, stories and small moments of interaction designed to stay with people.",
     projectsMore: "More experiments in the lab",
     projectsGithub: "Visit GitHub",
     openCase: "open case",
@@ -72,6 +76,7 @@ export const messages: Record<Locale, Messages> = {
     contactTitleTwo: "Let's make it",
     contactTitleThree: "move.",
     current: "currently available",
+    emailLabel: "Email",
     contactSunOne: "let's make",
     contactSunTwo: "something",
     sceneAria: "Transition to selected work",
@@ -81,8 +86,20 @@ export const messages: Record<Locale, Messages> = {
     sceneTitleThree: "to impact.",
     sceneMetaOne: "Direction / design / development",
     sceneMetaTwo: "Every frame earns its place",
-  },
-  pt: {
+    reelAria: "Closing motion statement",
+    reelKicker: "Afterimage / closing reel",
+    reelTitleOne: "Built to",
+    reelTitleTwo: "be felt.",
+    reelTrack: "idea / systems / motion / impact",
+    reelMetaOne: "Clarity in every interaction",
+    reelMetaTwo: "Motion with a reason",
+    cursorView: "view",
+} as const;
+
+type MessageKey = keyof typeof enMessages;
+
+const ptMessages: Record<MessageKey, string> = {
+    skipToContent: "Pular para o conteúdo",
     navAbout: "Sobre",
     navWork: "Trabalhos",
     navContact: "Contato",
@@ -98,6 +115,7 @@ export const messages: Record<Locale, Messages> = {
     loadingPlease: "aguarde",
     loadingLocation: "São Paulo / Brasil",
     loadingDigital: "design de experiências digitais",
+    heroAria: "Apresentação",
     heroKicker: "desenvolvedor front-end criativo",
     heroEyebrow: "Interfaces com pulso.",
     heroTitleOne: "Criando",
@@ -105,6 +123,9 @@ export const messages: Record<Locale, Messages> = {
     heroTitleThree: "para a",
     heroTitleFour: "web.",
     heroDescription: "Transformo ideias complexas em experiências digitais claras, táteis e impossíveis de ignorar.",
+    heroOrbitTop: "movimento / código / sensação",
+    heroOrbitBottom: "role para explorar · role para explorar ·",
+    heroGhost: "sentir",
     heroSee: "ver",
     heroWork: "o trabalho",
     heroLocation: "Brasil",
@@ -119,6 +140,7 @@ export const messages: Record<Locale, Messages> = {
     aboutLead: "Eu sou Carlos — desenvolvedor front-end obcecado pelo espaço entre uma boa ideia e a sensação que ela desperta.",
     aboutCopy: "Crio interfaces cuidadosas, sistemas de movimento expressivos e produtos confiáveis para quem se importa com os detalhes. A tecnologia muda. A intenção permanece.",
     aboutLink: "Vamos criar algo",
+    portraitAlt: "Carlos Henrique trabalhando",
     portrait: "retrato / 2024",
     statYears: "anos criando",
     statProducts: "produtos digitais",
@@ -129,16 +151,17 @@ export const messages: Record<Locale, Messages> = {
     toolkitEyebrow: "Uma stack flexível",
     toolkitTitleOne: "A tecnologia é",
     toolkitTitleTwo: "o meio.",
-    toolkitIntro: "A melhor ferramenta é aquela que faz a ideia parecer inevitável. Escolho a tecnologia em torno da história, nunca o contrário.",
+    toolkitIntro: "A melhor ferramenta é aquela que faz a ideia parecer inevitável. Escolho a tecnologia a partir da história, nunca o contrário.",
+    skillsAria: "Tecnologias e ferramentas",
     toolkitBottom: "Sempre aprendendo / sempre construindo",
     selectedWork: "trabalhos selecionados",
-    selectedWorkSub: "criados para gerar sensação",
+    selectedWorkSub: "feitos para despertar sensações",
     projectsEyebrow: "Algumas coisas que criei",
     projectsTitleOne: "Projetos",
     projectsTitleTwo: "selecionados.",
-    projectsIntro: "Não são apenas telas. São sistemas, histórias e pequenos gestos de interação que fazem a diferença.",
+    projectsIntro: "Não são apenas telas. São sistemas, histórias e pequenos gestos de interação pensados para ficar na memória.",
     projectsMore: "Mais experimentos no laboratório",
-    projectsGithub: "Visitar GitHub",
+    projectsGithub: "Visitar o GitHub",
     openCase: "abrir projeto",
     contact: "contato",
     contactSub: "a próxima cena é sua",
@@ -146,6 +169,7 @@ export const messages: Record<Locale, Messages> = {
     contactTitleTwo: "Vamos colocá-la",
     contactTitleThree: "em movimento.",
     current: "disponível no momento",
+    emailLabel: "E-mail",
     contactSunOne: "vamos criar",
     contactSunTwo: "algo",
     sceneAria: "Transição para os trabalhos selecionados",
@@ -155,8 +179,20 @@ export const messages: Record<Locale, Messages> = {
     sceneTitleThree: "ao impacto.",
     sceneMetaOne: "Direção / design / desenvolvimento",
     sceneMetaTwo: "Cada quadro tem uma intenção",
-  },
+    reelAria: "Declaração final em movimento",
+    reelKicker: "Imagem residual / rolo final",
+    reelTitleOne: "Feito para",
+    reelTitleTwo: "ser sentido.",
+    reelTrack: "ideia / sistemas / movimento / impacto",
+    reelMetaOne: "Clareza em cada interação",
+    reelMetaTwo: "Movimento com intenção",
+    cursorView: "ver",
 };
+
+export const messages = {
+  en: enMessages,
+  pt: ptMessages,
+} satisfies Record<Locale, Record<MessageKey, string>>;
 
 type SiteSettingsValue = {
   locale: Locale;
@@ -165,7 +201,7 @@ type SiteSettingsValue = {
   setTheme: (theme: ThemeMode) => void;
   toggleLocale: () => void;
   toggleTheme: () => void;
-  t: (key: keyof typeof messages.en) => string;
+  t: (key: MessageKey) => string;
 };
 
 const SiteSettingsContext = createContext<SiteSettingsValue | null>(null);

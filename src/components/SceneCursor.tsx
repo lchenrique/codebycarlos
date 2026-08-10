@@ -1,11 +1,13 @@
 "use client";
 
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap";
+import { useSiteSettings } from "@/lib/site-settings";
 import { useEffect, useRef } from "react";
 
 export function SceneCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const { t } = useSiteSettings();
 
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -72,7 +74,7 @@ export function SceneCursor() {
     <>
       <div ref={cursorRef} className="scene-cursor" aria-hidden="true" />
       <div ref={ringRef} className="scene-cursor-ring" aria-hidden="true">
-        <span>view</span>
+        <span>{t("cursorView")}</span>
       </div>
     </>
   );

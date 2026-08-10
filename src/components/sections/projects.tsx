@@ -1,8 +1,7 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
@@ -11,8 +10,6 @@ import "react-photo-view/dist/react-photo-view.css";
 import type { StaticImageData } from "next/image";
 import { Locale, useSiteSettings } from "@/lib/site-settings";
 import { portfolioImages } from "./images";
-
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 type LocalizedText = Record<Locale, string>;
 
@@ -35,7 +32,7 @@ const projects: PortfolioProject[] = [
     index: "01",
     category: { en: "Real-time product", pt: "Produto em tempo real" },
     year: "2023",
-    description: { en: "A real-time chat ecosystem designed around speed, presence and the little details that make communication feel human.", pt: "Um ecossistema de chat em tempo real pensado para velocidade, presença e os detalhes que tornam a comunicação mais humana." },
+    description: { en: "A real-time chat ecosystem designed around speed, presence, and the little details that make communication feel human.", pt: "Um ecossistema de chat em tempo real pensado para velocidade, presença e os detalhes que tornam a comunicação mais humana." },
     image: portfolioImages.winkoapp.winkoapp1,
     gallery: [portfolioImages.winkoapp.winkoapp1, portfolioImages.winkoapp.winkoapp2, portfolioImages.winkoapp.winkoapp3, portfolioImages.winkoapp.winkoapp4],
     technologies: ["React", "Socket.IO", "PostgreSQL"],
@@ -46,7 +43,7 @@ const projects: PortfolioProject[] = [
     index: "02",
     category: { en: "Financial interface", pt: "Interface financeira" },
     year: "2024",
-    description: { en: "A calmer way to see complex financial information — with dashboards that turn market noise into a clear next move.", pt: "Uma forma mais calma de enxergar informações financeiras complexas — dashboards que transformam ruído em uma decisão clara." },
+    description: { en: "A calmer way to understand complex financial information — with dashboards that turn market noise into a clear next step.", pt: "Uma forma mais tranquila de compreender informações financeiras complexas — com painéis que transformam o ruído do mercado em uma decisão clara." },
     image: portfolioImages.finnext.finNext1,
     gallery: [portfolioImages.finnext.finNext1],
     technologies: ["Next.js", "TypeScript", "Data viz"],
@@ -57,7 +54,7 @@ const projects: PortfolioProject[] = [
     index: "03",
     category: { en: "Creative platform", pt: "Plataforma criativa" },
     year: "2024",
-    description: { en: "A visual playground for ideas, built to make exploration feel as fluid as the work it helps create.", pt: "Um playground visual para ideias, feito para tornar a exploração tão fluida quanto o trabalho que ele ajuda a criar." },
+    description: { en: "A visual playground for ideas, built to make exploration feel as fluid as the work it helps create.", pt: "Um laboratório visual de ideias, criado para tornar a exploração tão fluida quanto o próprio processo criativo." },
     image: portfolioImages.visualab.visual1,
     gallery: [portfolioImages.visualab.visual1, portfolioImages.visualab.visual2, portfolioImages.visualab.visual3],
     technologies: ["React", "Motion", "WebGL"],
@@ -67,7 +64,7 @@ const projects: PortfolioProject[] = [
     index: "04",
     category: { en: "Product launch", pt: "Lançamento de produto" },
     year: "2023",
-    description: { en: "A focused landing experience that gives accounting teams a more modern and more confident first impression.", pt: "Uma landing page focada que entrega a times contábeis uma primeira impressão mais moderna e confiante." },
+    description: { en: "A focused landing experience that gives accounting teams a modern, confident first impression.", pt: "Uma landing page objetiva que oferece às equipes de contabilidade uma primeira impressão moderna e segura." },
     image: portfolioImages.softcontaLandingPage,
     gallery: [portfolioImages.softcontaLandingPage, portfolioImages.cadastro, portfolioImages.login, portfolioImages.recoveryPass],
     technologies: ["React", "Tailwind", "UX strategy"],
@@ -86,9 +83,9 @@ const projects: PortfolioProject[] = [
   {
     title: "Magic Panel",
     index: "06",
-    category: { en: "Open source library", pt: "Biblioteca open source" },
+    category: { en: "Open source library", pt: "Biblioteca de código aberto" },
     year: "2024",
-    description: { en: "A tiny interaction layer that gives modals and drawers a little more presence, control and polish.", pt: "Uma camada de interação que dá a modais e drawers mais presença, controle e acabamento." },
+    description: { en: "A tiny interaction layer that gives modals and drawers a little more presence, control, and polish.", pt: "Uma camada de interação enxuta que dá mais presença, controle e acabamento a modais e painéis laterais." },
     image: portfolioImages.magicPanel,
     gallery: [portfolioImages.magicPanel, portfolioImages.drawerB, portfolioImages.modal, portfolioImages.drawer],
     technologies: ["React", "TypeScript", "Open source"],
@@ -105,25 +102,36 @@ export function Projects() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(q(".section-marker, .projects-intro, .project-card, .project-media__hud, .project-card__info > *"), {
+        autoAlpha: 1,
+        y: 0,
+      });
+      gsap.set(q(".project-media"), { clipPath: "inset(0% 0 0% 0)" });
+      gsap.set(q(".project-media__curtain"), { scaleY: 0 });
+      return;
+    }
 
-    gsap.fromTo(q(".projects-intro"), { y: 50, autoAlpha: 0 }, {
-      y: 0,
-      autoAlpha: 1,
-      duration: 1,
-      ease: "power4.out",
-      scrollTrigger: { trigger: root, start: "top 72%" },
-    });
+    gsap.timeline({
+      scrollTrigger: { trigger: root, start: "top 74%", once: true },
+      defaults: { ease: "power4.out" },
+    })
+      .fromTo(q(".section-marker"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 })
+      .fromTo(q(".projects-intro"), { y: 48, autoAlpha: 0 }, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.95,
+      }, 0.08);
 
     q(".project-card").forEach((element) => {
       const card = element as HTMLElement;
       const media = card.querySelector(".project-media");
-      const image = card.querySelector(".project-media__image");
       const curtain = card.querySelector(".project-media__curtain");
       const hud = card.querySelector(".project-media__hud");
+      const info = card.querySelectorAll(".project-card__info > *");
 
       const reveal = gsap.timeline({
-        scrollTrigger: { trigger: card, start: "top 86%" },
+        scrollTrigger: { trigger: card, start: "top 86%", once: true, fastScrollEnd: true },
         defaults: { ease: "power4.out" },
       });
 
@@ -131,17 +139,31 @@ export function Projects() {
         .fromTo(card, { y: 72, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.05 })
         .fromTo(media, { clipPath: "inset(8% 0 8% 0)" }, { clipPath: "inset(0% 0 0% 0)", duration: 1.15 }, 0.08)
         .to(curtain, { scaleY: 0, duration: 1.05, ease: "expo.inOut" }, 0.12)
-        .fromTo(hud, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.8);
+        .fromTo(hud, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.8)
+        .fromTo(info, { y: 24, autoAlpha: 0 }, {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.65,
+          stagger: 0.08,
+          ease: "power3.out",
+        }, 0.62);
+    });
 
-      if (image) {
-        gsap.fromTo(image, { yPercent: -8, scale: 1.1 }, {
-          yPercent: 8,
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 901px)", () => {
+      q(".project-card--wide").forEach((element) => {
+        const card = element as HTMLElement;
+        const image = card.querySelector(".project-media__image");
+        if (!image) return;
+        gsap.fromTo(image, { yPercent: -6, scale: 1.07 }, {
+          yPercent: 6,
           scale: 1,
           ease: "none",
-          scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true },
+          scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 0.8 },
         });
-      }
+      });
     });
+    return () => mm.revert();
   }, { scope: sectionRef });
 
   return (
@@ -174,11 +196,11 @@ export function Projects() {
                     type="button"
                     className="project-media"
                     data-cursor="view"
-                    aria-label={locale === "pt" ? `Abrir galeria do projeto ${project.title}` : `Open ${project.title} project gallery`}
+                    aria-label={locale === "pt" ? `Abrir a galeria do projeto ${project.title}` : `Open the ${project.title} project gallery`}
                   >
                     <Image
                       src={project.image}
-                      alt={`${project.title} project interface`}
+                      alt={locale === "pt" ? `Interface do projeto ${project.title}` : `${project.title} project interface`}
                       fill
                       sizes={index === 0 || index === 3 ? "(max-width: 768px) 100vw, 65vw" : "(max-width: 768px) 100vw, 35vw"}
                       className="project-media__image"
@@ -205,8 +227,8 @@ export function Projects() {
                     {project.technologies.map((technology) => <span key={technology}>{technology}</span>)}
                   </div>
                   <div className="project-links">
-                    {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} live site`}><ExternalLink size={16} /></a>}
-                    {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} source code`}><Github size={16} /></a>}
+                    {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer" aria-label={locale === "pt" ? `Visitar o site do projeto ${project.title}` : `Visit the ${project.title} website`}><ExternalLink size={16} /></a>}
+                    {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer" aria-label={locale === "pt" ? `Ver o código-fonte de ${project.title}` : `View the ${project.title} source code`}><Github size={16} /></a>}
                   </div>
                 </div>
               </div>

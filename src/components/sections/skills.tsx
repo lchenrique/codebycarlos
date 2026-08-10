@@ -1,13 +1,10 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 import { ArrowDownRight } from "lucide-react";
 import { useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
-
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 const rowOne = ["React", "TypeScript", "Next.js", "GSAP", "Three.js", "Design systems", "Motion"];
 const rowTwo = ["Node.js", "PostgreSQL", "Tailwind", "Figma", "WebGL", "Prototyping", "Storytelling"];
@@ -32,26 +29,45 @@ export function Skills() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(q(".section-marker, .skills-heading > *, .skills-bottom"), {
+        autoAlpha: 1,
+        y: 0,
+      });
+      return;
+    }
 
-    gsap.fromTo(q(".skills-heading"), { y: 50, autoAlpha: 0 }, {
-      y: 0,
-      autoAlpha: 1,
-      duration: 1,
-      ease: "power4.out",
-      scrollTrigger: { trigger: root, start: "top 72%" },
-    });
+    gsap.timeline({
+      scrollTrigger: { trigger: root, start: "top 74%", once: true },
+      defaults: { ease: "power4.out" },
+    })
+      .fromTo(q(".section-marker"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 })
+      .fromTo(q(".skills-heading > *"), { y: 48, autoAlpha: 0 }, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.95,
+        stagger: 0.1,
+      }, 0.08)
+      .fromTo(q(".skills-bottom"), { y: 22, autoAlpha: 0 }, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.65,
+      }, 0.35);
 
-    gsap.to(q(".skills-track--one"), {
-      xPercent: -18,
-      ease: "none",
-      scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: 1 },
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 901px)", () => {
+      gsap.to(q(".skills-track--one"), {
+        xPercent: -18,
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: 0.8 },
+      });
+      gsap.to(q(".skills-track--two"), {
+        xPercent: 18,
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: 0.8 },
+      });
     });
-    gsap.to(q(".skills-track--two"), {
-      xPercent: 18,
-      ease: "none",
-      scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: 1 },
-    });
+    return () => mm.revert();
   }, { scope: sectionRef });
 
   return (
@@ -72,7 +88,7 @@ export function Skills() {
         </div>
       </div>
 
-      <div className="skills-marquee" aria-label="Technologies used">
+      <div className="skills-marquee" aria-label={t("skillsAria")}>
         <SkillRow items={rowOne} className="skills-track--one" />
         <SkillRow items={rowTwo} className="skills-track--two" />
       </div>

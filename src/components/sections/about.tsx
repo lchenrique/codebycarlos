@@ -1,14 +1,11 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
-
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   ["08+", "statYears"],
@@ -24,29 +21,50 @@ export function About() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(q(".section-marker, .about-reveal, .about-copy, .about-stat, .about-note"), {
+        autoAlpha: 1,
+        y: 0,
+        yPercent: 0,
+      });
+      gsap.set(q(".about-photo"), { clipPath: "inset(0 0 0% 0)" });
+      return;
+    }
 
-    gsap.fromTo(q(".about-reveal"), { yPercent: 115, autoAlpha: 0 }, {
-      yPercent: 0,
-      autoAlpha: 1,
-      duration: 1.1,
-      stagger: 0.08,
-      ease: "power4.out",
-      scrollTrigger: { trigger: root, start: "top 72%" },
+    const entry = gsap.timeline({
+      scrollTrigger: { trigger: root, start: "top 72%", once: true },
+      defaults: { ease: "power4.out" },
     });
-    gsap.fromTo(q(".about-copy, .about-photo, .about-stat"), { y: 38, autoAlpha: 0 }, {
-      y: 0,
-      autoAlpha: 1,
-      duration: 1,
-      stagger: 0.1,
-      ease: "power3.out",
-      scrollTrigger: { trigger: root, start: "top 62%" },
+    entry
+      .fromTo(q(".section-marker"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 })
+      .fromTo(q(".about-reveal"), { yPercent: 115, autoAlpha: 0 }, {
+        yPercent: 0,
+        autoAlpha: 1,
+        duration: 1.05,
+        stagger: 0.08,
+      }, 0.08)
+      .fromTo(q(".about-photo"), { clipPath: "inset(0 0 100% 0)" }, {
+        clipPath: "inset(0 0 0% 0)",
+        duration: 1.15,
+        ease: "expo.inOut",
+      }, 0.2)
+      .fromTo(q(".about-copy, .about-stat, .about-note"), { y: 36, autoAlpha: 0 }, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.85,
+        stagger: 0.08,
+        ease: "power3.out",
+      }, 0.4);
+
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 901px)", () => {
+      gsap.to(q(".about-photo img"), {
+        yPercent: 10,
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: 0.8 },
+      });
     });
-    gsap.to(q(".about-photo img"), {
-      yPercent: 10,
-      ease: "none",
-      scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: true },
-    });
+    return () => mm.revert();
   }, { scope: sectionRef });
 
   return (
@@ -70,13 +88,13 @@ export function About() {
 
           <div className="about-side">
             <div className="about-photo">
-              <Image src="/eu.png" alt="Carlos Henrique at work" fill sizes="(max-width: 768px) 100vw, 34vw" />
+              <Image src="/eu.png" alt={t("portraitAlt")} fill sizes="(max-width: 768px) 100vw, 34vw" />
               <span className="about-photo__caption">{t("portrait")}</span>
             </div>
             <div className="about-copy">
               <p className="about-copy__lead">{t("aboutLead")}</p>
               <p>{t("aboutCopy")}</p>
-              <a className="text-link" href="mailto:lc.henriquee@gmail.com">{t("aboutLink")} <ArrowUpRight size={16} /></a>
+              <a className="text-link" href="mailto:carlos@codebycarlos.dev">{t("aboutLink")} <ArrowUpRight size={16} /></a>
             </div>
           </div>
         </div>

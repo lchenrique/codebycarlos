@@ -1,18 +1,15 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
-
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
-  const { locale, t } = useSiteSettings();
+  const { t } = useSiteSettings();
 
   useGSAP(() => {
     const root = heroRef.current;
@@ -33,29 +30,37 @@ export function Hero() {
       .fromTo(q(".hero-line"), { yPercent: 120, skewY: 6 }, { yPercent: 0, skewY: 0, duration: 1.35, stagger: 0.08 }, "-=0.45")
       .fromTo(q(".hero-copy"), { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9 }, "-=0.65")
       .fromTo(q(".hero-orbit"), { scale: 0.65, autoAlpha: 0, rotation: -20 }, { scale: 1, autoAlpha: 1, rotation: 0, duration: 1.6, ease: "expo.out" }, "-=1.15")
-      .fromTo(q(".hero-footer"), { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, "-=0.75");
+      .fromTo(q(".hero-footer"), { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, "-=0.75")
+      .set(q(".hero-letterbox"), { willChange: "auto" });
 
     const playIntro = () => intro.play(0);
     if (document.body.dataset.intro === "complete") playIntro();
     else window.addEventListener("codebycarlos:intro-complete", playIntro, { once: true });
 
-    gsap.to(q(".hero-orbit__spin"), { rotation: 360, duration: 24, repeat: -1, ease: "none" });
-    gsap.to(q(".hero-orbit__image"), { y: -14, duration: 3.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    const visibility = { trigger: root, start: "top bottom", end: "bottom top", toggleActions: "play pause resume pause" };
+    gsap.to(q(".hero-orbit__spin"), { rotation: 360, duration: 24, repeat: -1, ease: "none", scrollTrigger: visibility });
+    gsap.to(q(".hero-orbit__image"), { y: -14, duration: 3.8, repeat: -1, yoyo: true, ease: "sine.inOut", scrollTrigger: visibility });
 
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: root,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1.2,
-      },
-    })
-      .to(q(".hero-stage"), { yPercent: -15, scale: 0.94, ease: "none" }, 0)
-      .to(q(".hero-grid"), { yPercent: 18, scale: 1.12, ease: "none" }, 0)
-      .to(q(".hero-orbit"), { yPercent: 34, rotation: 12, ease: "none" }, 0)
-      .to(q(".hero-ghost"), { xPercent: -12, opacity: 0.28, ease: "none" }, 0);
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 901px)", () => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: root,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      })
+        .to(q(".hero-stage"), { yPercent: -15, scale: 0.94, ease: "none" }, 0)
+        .to(q(".hero-grid"), { yPercent: 18, scale: 1.12, ease: "none" }, 0)
+        .to(q(".hero-orbit"), { yPercent: 34, rotation: 12, ease: "none" }, 0)
+        .to(q(".hero-ghost"), { xPercent: -12, opacity: 0.28, ease: "none" }, 0);
+    });
 
-    return () => window.removeEventListener("codebycarlos:intro-complete", playIntro);
+    return () => {
+      window.removeEventListener("codebycarlos:intro-complete", playIntro);
+      mm.revert();
+    };
   }, { scope: heroRef });
 
   useEffect(() => {
@@ -100,7 +105,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={heroRef} className="hero-section" aria-label="Introduction">
+    <section ref={heroRef} className="hero-section" aria-label={t("heroAria")}>
       <div className="hero-grid" aria-hidden="true" />
       <div className="hero-glow hero-glow--one" aria-hidden="true" />
       <div className="hero-glow hero-glow--two" aria-hidden="true" />
@@ -140,8 +145,8 @@ export function Hero() {
         </div>
           <div className="hero-orbit" aria-hidden="true">
             <div className="hero-orbit__spin">
-              <span className="hero-orbit__label hero-orbit__label--top">{locale === "pt" ? "movimento / código / sensação" : "motion / code / feeling"}</span>
-              <span className="hero-orbit__label hero-orbit__label--bottom">{locale === "pt" ? "role para explorar · role para explorar ·" : "scroll to explore · scroll to explore ·"}</span>
+              <span className="hero-orbit__label hero-orbit__label--top">{t("heroOrbitTop")}</span>
+              <span className="hero-orbit__label hero-orbit__label--bottom">{t("heroOrbitBottom")}</span>
               <div className="hero-orbit__ring hero-orbit__ring--outer" />
               <div className="hero-orbit__ring hero-orbit__ring--inner" />
             </div>
@@ -159,7 +164,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="hero-ghost" aria-hidden="true">feel</div>
+      <div className="hero-ghost" aria-hidden="true">{t("heroGhost")}</div>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap";
 import { useSiteSettings } from "@/lib/site-settings";
 import { useRef } from "react";
 

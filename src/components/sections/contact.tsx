@@ -1,18 +1,15 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
 import { useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
-
 const socials = [
   { label: "GitHub", href: "https://github.com/lchenrique", icon: Github },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/lc-henrique", icon: Linkedin },
-  { label: "Email", href: "mailto:lc.henriquee@gmail.com", icon: Mail },
+  { label: "Email", href: "mailto:carlos@codebycarlos.dev", icon: Mail },
 ];
 
 export function Contact() {
@@ -23,30 +20,41 @@ export function Contact() {
     const root = sectionRef.current;
     if (!root) return;
     const q = gsap.utils.selector(root);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(q(".contact-kicker, .contact-line, .contact-email, .contact-footer"), {
+        autoAlpha: 1,
+        y: 0,
+        yPercent: 0,
+        rotate: 0,
+      });
+      return;
+    }
 
-    gsap.fromTo(q(".contact-kicker, .contact-footer"), { y: 32, autoAlpha: 0 }, {
-      y: 0,
-      autoAlpha: 1,
-      duration: 1,
-      stagger: 0.15,
-      ease: "power4.out",
-      scrollTrigger: { trigger: root, start: "top 72%" },
-    });
-    gsap.fromTo(q(".contact-line"), { yPercent: 120, rotate: 3 }, {
-      yPercent: 0,
-      rotate: 0,
-      duration: 1.25,
-      stagger: 0.09,
-      ease: "power4.out",
-      scrollTrigger: { trigger: root, start: "top 68%" },
-    });
+    gsap.timeline({
+      scrollTrigger: { trigger: root, start: "top 72%", once: true },
+      defaults: { ease: "power4.out" },
+    })
+      .fromTo(q(".contact-kicker"), { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7 })
+      .fromTo(q(".contact-line"), { yPercent: 120, rotate: 3 }, {
+        yPercent: 0,
+        rotate: 0,
+        duration: 1.2,
+        stagger: 0.08,
+      }, 0.08)
+      .fromTo(q(".contact-email, .contact-footer"), { y: 30, autoAlpha: 0 }, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+      }, 0.42);
     gsap.to(q(".contact-sun"), {
       rotation: 360,
       scale: 1.06,
       duration: 18,
       repeat: -1,
       ease: "none",
+      scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", toggleActions: "play pause resume pause" },
     });
   }, { scope: sectionRef });
 
@@ -60,14 +68,14 @@ export function Contact() {
           <span>{t("contactSub")}</span>
         </div>
 
-        <div className="contact-heading">
+        <h2 className="contact-heading">
           <span className="line-mask"><span className="contact-line">{t("contactTitleOne")}</span></span>
           <span className="line-mask"><span className="contact-line contact-heading__muted">{t("contactTitleTwo")}</span></span>
           <span className="line-mask"><span className="contact-line">{t("contactTitleThree")}</span></span>
-        </div>
+        </h2>
 
-        <a className="contact-email" href="mailto:lc.henriquee@gmail.com">
-          <span>lc.henriquee@gmail.com</span>
+        <a className="contact-email" href="mailto:carlos@codebycarlos.dev">
+          <span>carlos@codebycarlos.dev</span>
           <ArrowUpRight size={28} />
         </a>
 
@@ -75,7 +83,7 @@ export function Contact() {
           <div className="social-links">
             {socials.map(({ label, href, icon: Icon }) => (
               <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
-                <Icon size={16} />{label}<ArrowUpRight className="social-links__arrow" size={14} />
+                <Icon size={16} />{label === "Email" ? t("emailLabel") : label}<ArrowUpRight className="social-links__arrow" size={14} />
               </a>
             ))}
           </div>

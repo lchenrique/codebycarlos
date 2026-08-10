@@ -1,12 +1,9 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
-
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 const chapters = [
   { id: "home", number: "01", en: "Opening frame", pt: "Cena de abertura" },
@@ -29,6 +26,7 @@ export function CinematicFrame() {
     const number = numberRef.current;
     const label = labelRef.current;
     if (!frame || !progress || !number || !label) return;
+    if (window.matchMedia("(max-width: 900px), (prefers-reduced-motion: reduce)").matches) return;
 
     const setChapter = (chapter: (typeof chapters)[number]) => {
       number.textContent = chapter.number;
@@ -39,11 +37,12 @@ export function CinematicFrame() {
 
     setChapter(chapters[0]);
     gsap.set(progress, { scaleY: 0, transformOrigin: "top center" });
+    const setProgress = gsap.quickSetter(progress, "scaleY");
 
     const progressTrigger = ScrollTrigger.create({
       start: 0,
       end: "max",
-      onUpdate: (self) => gsap.set(progress, { scaleY: self.progress }),
+      onUpdate: (self) => setProgress(self.progress),
     });
 
     const chapterTriggers = chapters.map((chapter) => {
