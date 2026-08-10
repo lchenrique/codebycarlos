@@ -16,7 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.codebycarlos.dev"),
+  metadataBase: new URL("https://codebycarlos.dev"),
   title: {
     default: "Carlos Henrique — Creative Front-end Developer",
     template: "%s — Code by Carlos",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   description:
     "Carlos Henrique creates high-performance digital experiences where interface, motion, and code meet.",
   applicationName: "Code by Carlos",
-  authors: [{ name: "Carlos Henrique", url: "https://www.codebycarlos.dev" }],
+  authors: [{ name: "Carlos Henrique", url: "https://codebycarlos.dev" }],
   creator: "Carlos Henrique",
   keywords: [
     "creative developer",
