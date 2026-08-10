@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { useSiteSettings } from "@/lib/site-settings";
 
 const stats = [
-  ["08+", "statYears"],
+  ["06+", "statYears"],
   ["20+", "statProducts"],
   ["∞", "statCuriosity"],
 ] as const;
