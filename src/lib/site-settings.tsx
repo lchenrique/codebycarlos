@@ -207,7 +207,7 @@ type SiteSettingsValue = {
 const SiteSettingsContext = createContext<SiteSettingsValue | null>(null);
 
 export function SiteSettingsProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocale] = useState<Locale>("pt");
   const [theme, setTheme] = useState<ThemeMode>("dark");
   const [ready, setReady] = useState(false);
 

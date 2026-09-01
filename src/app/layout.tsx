@@ -1,7 +1,4 @@
 import { Header } from "@/components/header";
-import { Loading } from "@/components/loading";
-import { SceneCursor } from "@/components/SceneCursor";
-import { CinematicFrame } from "@/components/cinematic-frame";
 import { SkipLink } from "@/components/skip-link";
 import { cn } from "@/lib/utils";
 import { SiteSettingsProvider } from "@/lib/site-settings";
@@ -18,22 +15,15 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://codebycarlos.dev"),
   title: {
-    default: "Carlos Henrique — Creative Front-end Developer",
+    default: "Code by Carlos — Soluções digitais para negócios em movimento",
     template: "%s — Code by Carlos",
   },
   description:
-    "Carlos Henrique creates high-performance digital experiences where interface, motion, and code meet.",
+    "Sites, sistemas sob medida, automações e produtos digitais para transformar ideias em operações que crescem.",
   applicationName: "Code by Carlos",
   authors: [{ name: "Carlos Henrique", url: "https://codebycarlos.dev" }],
   creator: "Carlos Henrique",
-  keywords: [
-    "creative developer",
-    "front-end developer",
-    "GSAP",
-    "Next.js",
-    "motion design",
-    "web development",
-  ],
+  keywords: ["sites profissionais", "sistemas sob medida", "automação de processos", "produtos digitais", "desenvolvimento web", "Code by Carlos"],
   alternates: { canonical: "/" },
   robots: {
     index: true,
@@ -41,33 +31,29 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   openGraph: {
-    title: "Carlos Henrique — Creative Front-end Developer",
-    description:
-      "High-performance digital experiences where interface, motion, and code meet.",
+    title: "Code by Carlos — Soluções digitais para negócios em movimento",
+    description: "Sites, sistemas, automações e produtos digitais feitos sob medida.",
     url: "/",
     siteName: "Code by Carlos",
-    images: [{ url: "/portifolio.png" }],
+    images: [{ url: "/carlos-portrait-v3.webp" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Carlos Henrique — Creative Front-end Developer",
-    description: "High-performance digital experiences where interface, motion, and code meet.",
-    images: ["/portifolio.png"],
+    title: "Code by Carlos — Soluções digitais para negócios em movimento",
+    description: "Sites, sistemas, automações e produtos digitais feitos sob medida.",
+    images: ["/carlos-portrait-v3.webp"],
   },
   icons: { icon: "/logo.svg" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={cn(inter.className, "bg-background text-foreground antialiased")} suppressHydrationWarning>
         <SiteSettingsProvider>
           <SkipLink />
-          <Loading />
           <Header />
-          <SceneCursor />
-          <CinematicFrame />
           <div id="smooth-content">{children}</div>
         </SiteSettingsProvider>
       </body>

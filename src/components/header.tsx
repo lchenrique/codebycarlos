@@ -1,118 +1,81 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { useSiteSettings } from "@/lib/site-settings";
-import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import Image from "next/image";
+import { Menu, Moon, Sun, X, ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const links = [
-  { id: "about", label: "navAbout" as const },
-  { id: "projects", label: "navWork" as const },
-  { id: "contact", label: "navContact" as const },
-];
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useSiteSettings } from "@/lib/site-settings";
+
+const sectionIds = ["servicos", "cases", "processo", "produtos", "contato"];
 
 export function Header() {
+  const { locale, theme, toggleLocale, toggleTheme } = useSiteSettings();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const { locale, theme, t, toggleLocale, toggleTheme } = useSiteSettings();
+  const pt = locale === "pt";
+  const links = pt
+    ? [["servicos", "Serviços"], ["cases", "Cases"], ["processo", "Como funciona"], ["produtos", "Produtos"], ["contato", "Contato"]]
+    : [["servicos", "Services"], ["cases", "Case studies"], ["processo", "How it works"], ["produtos", "Products"], ["contato", "Contact"]];
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 24);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const sections = ["home", "about", "projects", "contact"]
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => Boolean(section));
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
     const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (visible?.target.id) setActiveSection(visible.target.id);
-    }, { rootMargin: "-28% 0px -58%", threshold: [0, 0.15, 0.35] });
+    }, { rootMargin: "-26% 0px -58%", threshold: [0, 0.15, 0.35] });
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     if (!open) return;
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
   const goTo = (id: string) => {
+    const target = id === "home" ? null : document.getElementById(id);
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    if (id === "home") {
-      window.scrollTo({ top: 0, behavior });
-    } else {
-      const target = document.getElementById(id);
-      if (!target) return;
-      const header = document.querySelector(".site-header");
-      const offset = header instanceof HTMLElement ? header.offsetHeight + 12 : 24;
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: Math.max(0, top), behavior });
-    }
-
+    if (!target) window.scrollTo({ top: 0, behavior });
+    else target.scrollIntoView({ behavior, block: "start" });
     window.history.replaceState(null, "", id === "home" ? "/" : `#${id}`);
     setOpen(false);
   };
 
   return (
     <header className={cn("site-header", scrolled && "is-scrolled")}>
-      <div className="site-header__inner">
-        <button className="brand" onClick={() => goTo("home")} aria-label={t("backTop")}>
-          <Image src="/logo.svg" alt="" width={22} height={22} priority />
+      <div className="page-shell header-inner">
+        <button type="button" className="brand" onClick={() => goTo("home")} aria-label={pt ? "Voltar ao início" : "Back to top"}>
+          <Image src="/logo.svg" alt="" width={23} height={23} priority />
           <span>code by carlos</span>
         </button>
 
-        <nav className="desktop-nav" aria-label={t("primaryNavigation")}>
-          {links.map((link, index) => (
-            <button key={link.id} onClick={() => goTo(link.id)} className={cn("nav-link", activeSection === link.id && "is-active")} aria-current={activeSection === link.id ? "location" : undefined}>
-              <span className="nav-link__index">0{index + 1}</span>
-              {t(link.label)}
-            </button>
-          ))}
+        <nav className="desktop-nav" aria-label={pt ? "Navegação principal" : "Primary navigation"}>
+          {links.map(([id, label], index) => <button type="button" key={id} onClick={() => goTo(id)} className={cn("nav-link", activeSection === id && "is-active")} aria-current={activeSection === id ? "location" : undefined}><span>0{index + 1}</span>{label}</button>)}
         </nav>
 
         <div className="header-actions">
-          <div className="header-status">
-            <span className="status-dot" />
-            <span>{t("available")}</span>
-          </div>
-          <button className="header-control locale-control" onClick={toggleLocale} aria-label={t("languageSwitch")}>
-            <span>{locale === "en" ? "PT" : "EN"}</span>
-          </button>
-          <button className="header-control theme-control" onClick={toggleTheme} aria-label={t(theme === "dark" ? "useLight" : "useDark")}>
-            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
+          <span className="header-status"><i />{pt ? "Disponível" : "Available"}</span>
+          <Button type="button" variant="ghost" size="icon" className="header-icon-button" onClick={toggleLocale} aria-label={pt ? "Mudar para inglês" : "Mudar para português"}><span className="locale-label">{pt ? "EN" : "PT"}</span></Button>
+          <Button type="button" variant="ghost" size="icon" className="header-icon-button theme-button" onClick={toggleTheme} aria-label={theme === "dark" ? (pt ? "Usar tema claro" : "Use light theme") : (pt ? "Usar tema escuro" : "Use dark theme")}>{theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}</Button>
+          <Button asChild size="sm" className="header-cta"><a href="#contato">{pt ? "Começar" : "Start"}<ArrowUpRight /></a></Button>
+          <Button type="button" variant="ghost" size="icon" className="mobile-menu-button" onClick={() => setOpen((value) => !value)} aria-label={open ? (pt ? "Fechar menu" : "Close menu") : (pt ? "Abrir menu" : "Open menu")} aria-expanded={open}>{open ? <X size={21} /> : <Menu size={21} />}</Button>
         </div>
-
-        <button
-          className="mobile-menu-button"
-          onClick={() => setOpen((value) => !value)}
-          aria-label={open ? t("closeMenu") : t("openMenu")}
-          aria-expanded={open}
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
       </div>
 
       <div className={cn("mobile-menu", open && "is-open")} aria-hidden={!open}>
-        {links.map((link, index) => (
-          <button key={link.id} onClick={() => goTo(link.id)} className={cn("mobile-menu__link", activeSection === link.id && "is-active")} tabIndex={open ? 0 : -1}>
-            <span>0{index + 1}</span>
-            {t(link.label)}
-            <ArrowUpRight size={18} />
-          </button>
-        ))}
+        <nav aria-label={pt ? "Navegação mobile" : "Mobile navigation"}>{links.map(([id, label], index) => <button type="button" key={id} onClick={() => goTo(id)} tabIndex={open ? 0 : -1} className={cn("mobile-menu-link", activeSection === id && "is-active")}><span>0{index + 1}</span>{label}<ArrowUpRight size={18} /></button>)}</nav>
       </div>
     </header>
   );
