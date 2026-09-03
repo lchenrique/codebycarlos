@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={cn(inter.className, "bg-background text-foreground antialiased")} suppressHydrationWarning>
+      <body className={cn(inter.className, inter.variable, "bg-background text-foreground antialiased")} suppressHydrationWarning>
         <SiteSettingsProvider>
           <SkipLink />
           <Header />
