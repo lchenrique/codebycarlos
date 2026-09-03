@@ -21,7 +21,14 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import { portfolioImages } from "@/components/sections/images";
 import lumeStudioProduct from "@/assets/portfolio/product-showcase/lume-studio.png";
+import lumeStudioFormat from "@/assets/portfolio/product-showcase/lume-studio-format.png";
+import lumeStudioInspirations from "@/assets/portfolio/product-showcase/lume-studio-inspirations.png";
+import lumeStudioLibrary from "@/assets/portfolio/product-showcase/lume-studio-library.png";
+import lumeStudioBrand from "@/assets/portfolio/product-showcase/lume-studio-brand.png";
 import focusBrewProduct from "@/assets/portfolio/product-showcase/focus-brew.png";
+import focusBrewOverview from "@/assets/portfolio/product-showcase/focus-brew-overview.png";
+import focusBrewWallpaper from "@/assets/portfolio/product-showcase/focus-brew-wallpaper.webp";
+import focusBrewWallpaperNight from "@/assets/portfolio/product-showcase/focus-brew-wallpaper-night.webp";
 import medtimePulseProduct from "@/assets/portfolio/product-showcase/medtime-pulse.png";
 
 import { Badge } from "@/components/ui/badge";
@@ -308,7 +315,7 @@ const caseStudies: CaseStudy[] = [
     },
     tags: ["Vite", "React", "IA"],
     url: null,
-    gallery: gallery(lumeStudioProduct, []),
+    gallery: gallery(lumeStudioProduct, [lumeStudioFormat, lumeStudioInspirations, lumeStudioLibrary, lumeStudioBrand]),
   },
   {
     title: "Focus Brew",
@@ -319,7 +326,7 @@ const caseStudies: CaseStudy[] = [
     },
     tags: ["Next.js", "shadcn/ui", "Framer Motion"],
     url: "https://focusbrew.vercel.app/",
-    gallery: gallery(focusBrewProduct, []),
+    gallery: gallery(focusBrewProduct, [focusBrewOverview, focusBrewWallpaper, focusBrewWallpaperNight]),
   },
 ];
 
