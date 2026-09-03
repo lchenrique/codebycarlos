@@ -20,6 +20,9 @@ import type { StaticImageData } from "next/image";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import { portfolioImages } from "@/components/sections/images";
+import lumeStudioProduct from "@/assets/portfolio/product-showcase/lume-studio.png";
+import focusBrewProduct from "@/assets/portfolio/product-showcase/focus-brew.png";
+import medtimePulseProduct from "@/assets/portfolio/product-showcase/medtime-pulse.png";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -126,11 +129,11 @@ const copy = {
     productsKicker: "04 / Produtos",
     productsTitle: "Atalhos para o próximo nível.",
     productsIntro:
-      "Além de projetos sob medida, existem soluções prontas para tirar tarefas da frente e acelerar sua presença digital.",
+      "Depois dos cases, estas são ofertas prontas para tirar tarefas da frente e acelerar sua presença digital.",
     products: [
-      ["Launch Kit", "Para quem precisa vender online agora.", "Landing page, copy e analytics em uma entrega objetiva.", "a partir de R$ 2.490"],
-      ["Ops Flow", "Para quem quer recuperar horas da equipe.", "Automação de atendimento, leads e follow-up com visão do processo.", "a partir de R$ 1.890"],
-      ["MVP Sprint", "Para quem tem uma ideia e quer validar.", "Protótipo funcional com base sólida para testar antes de investir alto.", "a partir de R$ 4.900"],
+      ["Launch Kit", "Para quem precisa vender online agora.", "Landing page, copy e analytics em uma entrega objetiva."],
+      ["Ops Flow", "Para quem quer recuperar horas da equipe.", "Automação de atendimento, leads e follow-up com visão do processo."],
+      ["MVP Sprint", "Para quem tem uma ideia e quer validar.", "Protótipo funcional com base sólida para testar antes de investir alto."],
     ],
     productCta: "Quero conhecer",
     fitKicker: "05 / Para quem é",
@@ -186,8 +189,8 @@ const copy = {
     processNote: "No black boxes. You know what is being built and why.",
     productsKicker: "04 / Products",
     productsTitle: "Shortcuts to the next level.",
-    productsIntro: "Alongside custom projects, ready-to-go solutions can remove busywork and accelerate your digital presence.",
-    products: [["Launch Kit", "For teams that need to sell online now.", "Landing page, copy and analytics in one focused delivery.", "from R$ 2,490"], ["Ops Flow", "For teams that want hours back.", "Automated support, leads and follow-up with process visibility.", "from R$ 1,890"], ["MVP Sprint", "For ideas that need validation.", "A functional prototype with a solid base to test before scaling investment.", "from R$ 4,900"]],
+    productsIntro: "After the case studies, these ready-to-go offers remove busywork and accelerate your digital presence.",
+    products: [["Launch Kit", "For teams that need to sell online now.", "Landing page, copy and analytics in one focused delivery."], ["Ops Flow", "For teams that want hours back.", "Automated support, leads and follow-up with process visibility."], ["MVP Sprint", "For ideas that need validation.", "A functional prototype with a solid base to test before scaling investment."]],
     productCta: "I want to know more",
     fitKicker: "05 / Who it is for",
     fitTitle: "If technology became a bottleneck, let's talk.",
@@ -270,7 +273,7 @@ const caseStudies: CaseStudy[] = [
     description: { pt: "Aplicativo que lembra o horário dos medicamentos com notificações automáticas e interface direta.", en: "An app that reminds users to take medication on time, with automatic notifications and a direct interface." },
     tags: ["React", "TypeScript", "Tailwind"],
     url: "https://github.com/lchenrique/medicine-time",
-    gallery: gallery(portfolioImages.medtime.medtime16, portfolioImages.medtime),
+    gallery: gallery(portfolioImages.medtime.medtime16, [...Object.values(portfolioImages.medtime), medtimePulseProduct]),
   },
   {
     title: "Visualab",
@@ -295,6 +298,28 @@ const caseStudies: CaseStudy[] = [
     tags: ["React", "TypeScript", "Open source"],
     url: "https://magic-panel-web.vercel.app/",
     gallery: gallery(portfolioImages.magicPanel, [portfolioImages.drawerB, portfolioImages.modal, portfolioImages.drawer]),
+  },
+  {
+    title: "Lume Studio",
+    category: { pt: "Produto de conteúdo", en: "Content product" },
+    description: {
+      pt: "Workspace com IA para transformar briefing em conteúdo de marca.",
+      en: "An AI workspace that turns a brief into on-brand content.",
+    },
+    tags: ["Vite", "React", "IA"],
+    url: null,
+    gallery: gallery(lumeStudioProduct, []),
+  },
+  {
+    title: "Focus Brew",
+    category: { pt: "Produto de produtividade", en: "Productivity product" },
+    description: {
+      pt: "Pomodoro, hábitos e mídia ambiente reunidos em uma única mesa de foco.",
+      en: "Pomodoro, habits and ambient media brought together in one focus desk.",
+    },
+    tags: ["Next.js", "shadcn/ui", "Framer Motion"],
+    url: "https://focusbrew.vercel.app/",
+    gallery: gallery(focusBrewProduct, []),
   },
 ];
 
@@ -659,7 +684,7 @@ export function SolutionsHome() {
       <section id="produtos" className="products-section section-accent" aria-labelledby="products-title">
         <div className="page-shell">
           <Reveal className="section-intro section-intro--accent"><p className="section-kicker">{text.productsKicker}</p><div><h2 id="products-title">{text.productsTitle}</h2><p>{text.productsIntro}</p></div></Reveal>
-          <div className="product-grid">{text.products.map(([name, audience, description, price], index) => <Reveal key={name}><Card className={`product-card ${index === 1 ? "product-card--featured" : ""}`}><CardHeader className="product-card__header"><div className="product-top"><Badge variant="outline" className="product-badge">{index === 1 ? (pt ? "Mais pedido" : "Most popular") : `0${index + 1}`}</Badge><ArrowUpRight size={19} /></div><CardTitle className="product-card__title">{name}</CardTitle><CardDescription className="product-card__description">{audience}</CardDescription></CardHeader><CardContent className="product-card__content"><p>{description}</p><div className="product-bottom"><strong>{price}</strong><a href="#contato">{text.productCta}<ArrowRight size={15} /></a></div></CardContent></Card></Reveal>)}</div>
+          <div className="product-grid">{text.products.map(([name, audience, description], index) => <Reveal key={name}><Card className={`product-card ${index === 1 ? "product-card--featured" : ""}`}><CardHeader className="product-card__header"><div className="product-top"><Badge variant="outline" className="product-badge">{index === 1 ? (pt ? "Mais pedido" : "Most popular") : `0${index + 1}`}</Badge><ArrowUpRight size={19} /></div><CardTitle className="product-card__title">{name}</CardTitle><CardDescription className="product-card__description">{audience}</CardDescription></CardHeader><CardContent className="product-card__content"><p>{description}</p><div className="product-bottom"><a href="#contato">{text.productCta}<ArrowRight size={15} /></a></div></CardContent></Card></Reveal>)}</div>
         </div>
       </section>
 
