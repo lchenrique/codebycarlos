@@ -346,7 +346,7 @@ function Reveal({ children, className = "" }: { children: React.ReactNode; class
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={ref} className={`reveal gsap-reveal ${className}`}>{children}</div>;
+  return <div ref={ref} className={`reveal ${className}`}>{children}</div>;
 }
 
 function Mark({ className = "" }: { className?: string }) {
@@ -393,7 +393,7 @@ export function SolutionsHome() {
     });
 
     if (reduced) {
-      gsap.set(q(".gsap-reveal, .service-panel, .case-row, .process-step"), { autoAlpha: 1, y: 0, x: 0, scale: 1, clearProps: "transform" });
+      gsap.set(q(".service-panel, .case-row, .process-step"), { autoAlpha: 1, y: 0, x: 0, scale: 1, clearProps: "transform" });
       root.querySelectorAll(".process-step").forEach((step) => step.classList.add("is-reached"));
       gsap.set(q(".track-fill"), { "--p": 1 });
       return;
@@ -449,16 +449,6 @@ export function SolutionsHome() {
         duration: 0.85,
         ease: "power3.out",
         scrollTrigger: { trigger: panel, start: "top 88%", once: true },
-      });
-    });
-
-    q(".gsap-reveal").forEach((element) => {
-      gsap.fromTo(element, { y: 46, autoAlpha: 0 }, {
-        y: 0,
-        autoAlpha: 1,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: { trigger: element, start: "top 84%", once: true },
       });
     });
 
