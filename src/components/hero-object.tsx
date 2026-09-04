@@ -36,7 +36,8 @@ import { useSiteSettings } from "@/lib/site-settings";
 
 const ACID = "#d9ff45";
 const BLUE = "#79a7ff";
-const DUST_COUNT = 1100;
+/* Decorative quality is intentionally capped; the hero should not compete with page content. */
+const DUST_COUNT = 760;
 const DUST_SIZE = 0.034;
 /* Outer diameter of the widest ring — the framing keeps it at FRAME_FILL times the anchor box. */
 const OBJECT_SPAN = 5.64;
@@ -124,17 +125,21 @@ export function HeroObject() {
     const host = hostRef.current;
     if (!host) return;
 
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const compact = window.matchMedia("(max-width: 720px)").matches;
+    const lowPower = compact || (navigator.hardwareConcurrency ?? 8) <= 4;
+    const pixelRatioCap = compact ? 1.25 : 1.6;
+    const antialias = !compact && window.devicePixelRatio <= 1.5;
+
     let renderer: WebGLRenderer;
     try {
-      renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+      renderer = new WebGLRenderer({ alpha: true, antialias, powerPreference: "high-performance" });
     } catch {
       host.dataset.unsupported = "true";
       return;
     }
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const compact = window.matchMedia("(max-width: 720px)").matches;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1.6 : 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, pixelRatioCap));
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
     renderer.domElement.className = "hero-object__canvas";
@@ -165,15 +170,15 @@ export function HeroObject() {
     wire.scale.setScalar(1.008);
     group.add(wire);
 
-    const glowGeometry = new IcosahedronGeometry(1.12, 2);
+    const glowGeometry = new IcosahedronGeometry(1.12, compact ? 1 : 2);
     const glowMaterial = new MeshBasicMaterial({ color: new Color(ACID), transparent: true, opacity: 0.14, blending: AdditiveBlending, depthWrite: false });
     group.add(new Mesh(glowGeometry, glowMaterial));
 
     /* Two atmosphere shells: the inner one carries the cursor trail, the outer one is a hover-only bloom. */
-    const trailLength = compact ? 14 : 28;
+    const trailLength = compact ? 10 : 20;
     const trailDirs = Array.from({ length: trailLength }, () => new Vector3(0, 0, 1));
     const trailAmp = new Float32Array(trailLength);
-    const glowShellGeometry = new IcosahedronGeometry(1, 5);
+    const glowShellGeometry = new IcosahedronGeometry(1, compact ? 3 : 4);
 
     const addShell = (radius: number, material: ShaderMaterial) => {
       const mesh = new Mesh(glowShellGeometry, material);
@@ -229,7 +234,7 @@ export function HeroObject() {
       depthWrite: false,
     }));
 
-    const ringGeometry = new TorusGeometry(2.45, 0.012, 8, 190);
+    const ringGeometry = new TorusGeometry(2.45, 0.012, 8, compact ? 96 : 144);
     const ringAMaterial = new MeshBasicMaterial({ color: new Color(ACID), transparent: true, opacity: 0.42 });
     const ringBMaterial = new MeshBasicMaterial({ color: new Color(BLUE), transparent: true, opacity: 0.3 });
     const ringA = new Mesh(ringGeometry, ringAMaterial);
@@ -240,7 +245,7 @@ export function HeroObject() {
     group.add(ringA, ringB);
 
     /* Star field: wide enough to cover the whole hero, centred on the viewport rather than the planet. */
-    const dustCount = compact ? Math.round(DUST_COUNT * 0.45) : DUST_COUNT;
+    const dustCount = compact ? 240 : DUST_COUNT;
     const positions = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i += 1) {
       const radius = 4.2 + Math.random() * 6;
@@ -386,11 +391,14 @@ export function HeroObject() {
     let last = performance.now();
     let elapsed = 0;
     let intro = 0;
+    /* Lower-power devices keep the same animation but render it at 30fps. */
+    const frameInterval = lowPower ? 1000 / 30 : 0;
 
     const render = (now: number) => {
       frame = requestAnimationFrame(render);
       /* Clamp both ends: the rAF timestamp can predate the performance.now() taken in start(). */
       const delta = Math.min(Math.max((now - last) / 1000, 0), 0.05);
+      if (frameInterval && delta * 1000 < frameInterval) return;
       last = now;
       elapsed += delta;
       intro = Math.min(intro + delta / 1.3, 1);
