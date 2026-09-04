@@ -127,8 +127,7 @@ export function HeroObject() {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const compact = window.matchMedia("(max-width: 720px)").matches;
-    const lowPower = compact || (navigator.hardwareConcurrency ?? 8) <= 4;
-    const pixelRatioCap = compact ? 1.25 : 1.6;
+    const pixelRatioCap = compact ? 0.9 : 1.1;
     const antialias = !compact && window.devicePixelRatio <= 1.5;
 
     let renderer: WebGLRenderer;
@@ -350,6 +349,7 @@ export function HeroObject() {
     const ndc = new Vector2();
     const scratch = new Vector3();
     const pointerArea = host.closest(".solutions-hero") ?? host;
+    let pendingPointer: { clientX: number; clientY: number } | null = null;
     let trailHead = 0;
 
     const pushTrail = (point: Vector3) => {
@@ -366,20 +366,12 @@ export function HeroObject() {
     };
 
     const onPointerMove = (event: Event) => {
-      const bounds = host.getBoundingClientRect();
       const { clientX, clientY } = event as PointerEvent;
-      targetX = ((clientX - bounds.left) / bounds.width - 0.5) * 2;
-      targetY = ((clientY - bounds.top) / bounds.height - 0.5) * 2;
-
-      /* The canvas is pointer-events: none, so hover is resolved by raycasting the core itself. */
-      ndc.set(targetX, -targetY);
-      raycaster.setFromCamera(ndc, camera);
-      const hit = raycaster.intersectObject(core, false)[0];
-      hoverTarget = hit ? 1 : 0;
-      if (hit) pushTrail(hit.point);
+      pendingPointer = { clientX, clientY };
     };
     const onPointerLeave = () => {
       hoverTarget = 0;
+      pendingPointer = null;
     };
 
     if (!reduced && window.matchMedia("(hover: hover)").matches) {
@@ -391,8 +383,10 @@ export function HeroObject() {
     let last = performance.now();
     let elapsed = 0;
     let intro = 0;
-    /* Lower-power devices keep the same animation but render it at 30fps. */
-    const frameInterval = lowPower ? 1000 / 30 : 0;
+    /* The object is decorative; 30fps keeps its motion alive without competing with page scroll. */
+    const frameInterval = 1000 / 30;
+    let isInView = true;
+    let scrollResumeTimer = 0;
 
     const render = (now: number) => {
       frame = requestAnimationFrame(render);
@@ -402,6 +396,21 @@ export function HeroObject() {
       last = now;
       elapsed += delta;
       intro = Math.min(intro + delta / 1.3, 1);
+
+      if (pendingPointer) {
+        const bounds = host.getBoundingClientRect();
+        targetX = ((pendingPointer.clientX - bounds.left) / bounds.width - 0.5) * 2;
+        targetY = ((pendingPointer.clientY - bounds.top) / bounds.height - 0.5) * 2;
+
+        /* The canvas is pointer-events: none, so hover is resolved by raycasting the core itself. */
+        ndc.set(targetX, -targetY);
+        raycaster.setFromCamera(ndc, camera);
+        const hit = raycaster.intersectObject(core, false)[0];
+        hoverTarget = hit ? 1 : 0;
+        if (hit) pushTrail(hit.point);
+        pendingPointer = null;
+      }
+
       const ease = 1 - (1 - intro) ** 3;
 
       const follow = Math.min(delta * 3.4, 1);
@@ -440,7 +449,7 @@ export function HeroObject() {
     };
 
     const start = () => {
-      if (frame || reduced) return;
+      if (frame || reduced || !isInView || document.hidden) return;
       last = performance.now();
       frame = requestAnimationFrame(render);
     };
@@ -459,13 +468,30 @@ export function HeroObject() {
       start();
     }
 
-    const inView = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
+    const inView = new IntersectionObserver(([entry]) => {
+      isInView = entry.isIntersecting;
+      if (isInView) start();
+      else stop();
+    });
     inView.observe(host);
+    const onScroll = () => {
+      if (reduced || !isInView) return;
+      stop();
+      window.clearTimeout(scrollResumeTimer);
+      scrollResumeTimer = window.setTimeout(() => {
+        scrollResumeTimer = 0;
+        start();
+      }, 180);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     const onVisibility = () => (document.hidden ? stop() : start());
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       stop();
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(scrollResumeTimer);
       inView.disconnect();
       observer.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);

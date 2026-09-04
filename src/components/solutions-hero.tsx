@@ -204,10 +204,13 @@ export function SolutionsHero({ locale }: { locale: "pt" | "en" }) {
       window.addEventListener("resize", onResize);
     }
 
-    gsap.to(q(".hero-orbit"), { rotation: 360, duration: 68, repeat: -1, ease: "none" });
-    gsap.to(q(".hero-aurora--acid"), { xPercent: 12, yPercent: -14, duration: 15, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    gsap.to(q(".hero-aurora--blue"), { xPercent: -16, yPercent: 12, duration: 19, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    gsap.to(q(".hero-aurora--coral"), { xPercent: 10, yPercent: 16, duration: 23, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    /* The 3D object carries the motion; background layers only settle into place once. */
+    if (window.matchMedia("(hover: hover)").matches) {
+      gsap.to(q(".hero-orbit"), { rotation: 360, duration: 68, repeat: -1, ease: "none" });
+      gsap.to(q(".hero-aurora--acid"), { xPercent: 12, yPercent: -14, duration: 15, ease: "sine.inOut" });
+      gsap.to(q(".hero-aurora--blue"), { xPercent: -16, yPercent: 12, duration: 19, ease: "sine.inOut" });
+      gsap.to(q(".hero-aurora--coral"), { xPercent: 10, yPercent: 16, duration: 23, ease: "sine.inOut" });
+    }
 
     /* Scroll parallax across the hero layers. */
     gsap.to(q(".hero-grid"), {
