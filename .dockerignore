@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.env*
+data
+out
+build
+coverage
+*_dev*.log
+_dev*.log
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.tsbuildinfo
+brand
+react-email-starter
