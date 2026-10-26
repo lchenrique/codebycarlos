@@ -57,7 +57,11 @@ export function sameOrigin(request: Request) {
   const origin = request.headers.get("origin");
   if (!origin) return true;
   try {
+    const source = new URL(origin);
     const url = new URL(request.url);
-    return new URL(origin).host === url.host && new URL(origin).protocol === url.protocol;
+    // Next.js may see HTTP internally when HTTPS terminates at the Coolify reverse proxy.
+    const host = (request.headers.get("x-forwarded-host") || request.headers.get("host") || url.host).split(",")[0].trim();
+    const protocol = (request.headers.get("x-forwarded-proto") || url.protocol.slice(0, -1)).split(",")[0].trim();
+    return source.host.toLowerCase() === host.toLowerCase() && source.protocol === protocol + ":";
   } catch { return false; }
 }
