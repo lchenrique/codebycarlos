@@ -20,6 +20,7 @@ RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs --home-dir /app --no-cr
 COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=build --chown=nextjs:nodejs /app/public ./public
+COPY --from=build --chown=nextjs:nodejs /app/bootstrap-production.mjs ./bootstrap-production.mjs
 USER nextjs
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["node", "bootstrap-production.mjs"]

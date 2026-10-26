@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { unlinkSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { ADMIN_COOKIE, clearFailures, createSession, loginAllowed, passwordMatches, registerFailure, sameOrigin } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
@@ -19,6 +21,7 @@ export async function POST(request: Request) {
       httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", path: "/admin",
       maxAge: 7 * 86400,
     });
+    try { unlinkSync(join(dirname(process.env.ANALYTICS_DB_PATH || "/app/data/analytics.sqlite"), "bootstrap-password.txt")); } catch { /* Already removed or manual configuration. */ }
     return response;
   } catch {
     return NextResponse.json({ error: "Acesso não configurado no servidor." }, { status: 503 });
