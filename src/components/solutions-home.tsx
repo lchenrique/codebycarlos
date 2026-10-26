@@ -34,6 +34,7 @@ import medtimePulseProduct from "@/assets/portfolio/product-showcase/medtime-pul
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SolutionsHero } from "@/components/solutions-hero";
+import { ContactForm } from "@/components/contact-form";
 import {
   Card,
   CardContent,
@@ -53,19 +54,19 @@ const copy = {
     ],
     heroRole: "Carlos Henrique · fundador",
     servicesKicker: "01 / Soluções",
-    servicesTitle: "O que posso construir com você",
+    servicesTitle: "O que seu negócio precisa?",
     servicesIntro:
-      "Cada projeto começa com um problema real. A solução pode ser uma página, uma operação inteira ou um produto novo.",
+      "De um site para atrair clientes a um sistema para organizar sua empresa: explico as opções sem complicar com termos técnicos.",
     serviceCta: "Quero uma solução assim",
     serviceCtaShort: "Falar sobre isso",
     services: [
       {
         icon: LayoutTemplate,
         number: "01",
-        title: "Sites & landing pages",
+        title: "Sites profissionais",
         description:
-          "Presença digital com estratégia de conversão, copy clara, SEO técnico e uma experiência que representa o valor da sua marca.",
-        items: ["Landing pages", "Sites institucionais", "E-commerce e páginas de campanha"],
+          "Um site profissional para mostrar seu trabalho, ser encontrado no Google e facilitar o contato de novos clientes.",
+        items: ["Páginas para captar clientes", "Sites para empresas", "Catálogos e páginas de vendas"],
         tone: "lime",
         weeks: "2–5",
       },
@@ -75,35 +76,35 @@ const copy = {
         title: "Sistemas sob medida",
         description:
           "Ferramentas internas e produtos digitais feitos para o seu fluxo — sem planilhas frágeis ou processos espalhados.",
-        items: ["Dashboards e portais", "Áreas logadas", "Integrações e APIs"],
+        items: ["Painéis administrativos", "Áreas de clientes", "Integração de ferramentas"],
         tone: "blue",
         weeks: "6–12",
       },
       {
         icon: Bot,
         number: "03",
-        title: "Automações inteligentes",
+        title: "Automação de tarefas",
         description:
-          "Conecte as ferramentas que você já usa e automatize tarefas repetitivas para a equipe focar no que realmente importa.",
-        items: ["WhatsApp e atendimento", "CRM e follow-up", "Fluxos com IA"],
+          "Economize tempo com atendimento, avisos e tarefas repetitivas funcionando de maneira organizada.",
+        items: ["Atendimento via WhatsApp", "Organização de contatos", "Automações com inteligência artificial"],
         tone: "coral",
         weeks: "2–6",
       },
       {
         icon: Package,
         number: "04",
-        title: "Produtos digitais",
+        title: "Aplicativos e ideias digitais",
         description:
-          "Kits prontos, componentes e soluções enxutas para você lançar mais rápido — com qualidade de produto desde o primeiro dia.",
-        items: ["MVPs e protótipos", "Kits de interface", "Consultoria técnica"],
+          "Transforme uma ideia em um aplicativo ou primeira versão funcional para testar com clientes reais.",
+        items: ["Aplicativos e protótipos", "Primeira versão de um produto", "Orientação técnica"],
         tone: "violet",
         weeks: "1–4",
       },
     ],
-    casesKicker: "02 / Cases",
-    casesTitle: "Projetos reais. Problemas resolvidos.",
+    casesKicker: "02 / Trabalhos realizados",
+    casesTitle: "Veja exemplos do meu trabalho",
     casesIntro: "Uma amostra do tipo de produto e experiência que entra em produção quando estratégia e execução caminham juntas.",
-    casesCta: "Ver mais detalhes",
+    casesCta: "Conhecer outros projetos",
     processKicker: "03 / Método",
     processTitle: "Clareza antes do código.",
     processIntro:
@@ -133,26 +134,26 @@ const copy = {
     ],
     processOutputs: "Você recebe",
     processNote: "Sem caixa-preta. Você sabe o que está sendo feito e por quê.",
-    productsKicker: "04 / Produtos",
-    productsTitle: "Atalhos para o próximo nível.",
+    productsKicker: "04 / Pacotes para começar",
+    productsTitle: "Uma solução para cada etapa.",
     productsIntro:
-      "Depois dos cases, estas são ofertas prontas para tirar tarefas da frente e acelerar sua presença digital.",
+      "Não precisa saber de tecnologia para começar. Escolha o que mais combina com sua necessidade e conversamos sobre o orçamento.",
     products: [
-      ["Launch Kit", "Para quem precisa vender online agora.", "Landing page, copy e analytics em uma entrega objetiva."],
-      ["Ops Flow", "Para quem quer recuperar horas da equipe.", "Automação de atendimento, leads e follow-up com visão do processo."],
-      ["MVP Sprint", "Para quem tem uma ideia e quer validar.", "Protótipo funcional com base sólida para testar antes de investir alto."],
+      ["Meu primeiro site", "Para quem quer apresentar seu negócio online.", "Site pensado para aparecer nas buscas e transformar visitas em contatos."],
+      ["Menos tarefas manuais", "Para quem precisa ganhar tempo no atendimento.", "Organização de mensagens, clientes e tarefas repetitivas."],
+      ["Tirar a ideia do papel", "Para quem quer lançar um aplicativo ou sistema.", "Uma primeira versão funcional para testar antes de investir mais."],
     ],
-    productCta: "Quero conhecer",
+    productCta: "Pedir orçamento",
     fitKicker: "05 / Para quem é",
-    fitTitle: "Se a tecnologia virou um gargalo, a gente conversa.",
+    fitTitle: "Você cuida do seu negócio. Eu cuido da tecnologia.",
     fitText:
       "Trabalho com negócios que precisam de mais clareza, velocidade e autonomia — de profissionais independentes a equipes em crescimento.",
     fitItems: ["Você tem uma ideia, mas não sabe por onde começar.", "Sua operação cresceu e as ferramentas não acompanharam.", "Você quer vender melhor sem depender de soluções genéricas."],
-    fitCta: "Destravar meu próximo passo",
+    fitCta: "Conversar sobre meu projeto",
     contactKicker: "06 / Vamos conversar",
-    contactTitle: "Conte o que você precisa. Eu penso no caminho.",
+    contactTitle: "Vamos conversar sobre sua ideia?",
     contactText:
-      "Me mande uma mensagem com o contexto, objetivo e prazo. Eu retorno com perguntas objetivas e um próximo passo claro.",
+      "Não precisa ter um briefing pronto. Conte o que você quer melhorar ou construir, e conversamos sobre a melhor solução.",
     contactCta: "carlos@codebycarlos.dev",
     contactSecondary: "Ver LinkedIn",
     footer: "Sites · Sistemas · Automações · Produtos digitais",
@@ -232,6 +233,8 @@ function gallery(cover: StaticImageData, rest: Record<string, StaticImageData> |
   const all = [cover, ...(Array.isArray(rest) ? rest : Object.values(rest))];
   return all.filter((image, index) => all.indexOf(image) === index);
 }
+
+const serviceRoutes = ["/servicos/criacao-de-sites", "/servicos/sistemas-sob-medida", "/servicos/automacao-de-processos"];
 
 const caseStudies: CaseStudy[] = [
   {
@@ -531,6 +534,7 @@ export function SolutionsHome() {
                           <li key={item}><Check size={15} />{item}</li>
                         ))}
                       </ul>
+                      {index < serviceRoutes.length && <a className="service-more" href={serviceRoutes[index]}>{pt ? "Entenda melhor este serviço" : "Learn more"} <ArrowUpRight size={15} /></a>}
                       <div className="panel-foot">
                         <span>{pt ? "A partir de" : "Starting at"} <strong>{service.weeks} {pt ? "semanas" : "weeks"}</strong></span>
                         <a href="#contato">{text.serviceCtaShort}<ArrowUpRight size={15} /></a>
@@ -681,7 +685,7 @@ export function SolutionsHome() {
       <section id="produtos" className="products-section section-accent" aria-labelledby="products-title">
         <div className="page-shell">
           <Reveal className="section-intro section-intro--accent"><p className="section-kicker">{text.productsKicker}</p><div><h2 id="products-title">{text.productsTitle}</h2><p>{text.productsIntro}</p></div></Reveal>
-          <div className="product-grid">{text.products.map(([name, audience, description], index) => <Reveal key={name}><Card className={`product-card ${index === 1 ? "product-card--featured" : ""}`}><CardHeader className="product-card__header"><div className="product-top"><Badge variant="outline" className="product-badge">{index === 1 ? (pt ? "Mais pedido" : "Most popular") : `0${index + 1}`}</Badge><ArrowUpRight size={19} /></div><CardTitle className="product-card__title">{name}</CardTitle><CardDescription className="product-card__description">{audience}</CardDescription></CardHeader><CardContent className="product-card__content"><p>{description}</p><div className="product-bottom"><a href="#contato">{text.productCta}<ArrowRight size={15} /></a></div></CardContent></Card></Reveal>)}</div>
+          <div className="product-grid">{text.products.map(([name, audience, description], index) => <Reveal key={name}><Card className={`product-card ${index === 1 ? "product-card--featured" : ""}`}><CardHeader className="product-card__header"><div className="product-top"><Badge variant="outline" className="product-badge">{index === 1 ? (pt ? "Sob medida" : "Tailored") : `0${index + 1}`}</Badge><ArrowUpRight size={19} /></div><CardTitle className="product-card__title">{name}</CardTitle><CardDescription className="product-card__description">{audience}</CardDescription></CardHeader><CardContent className="product-card__content"><p>{description}</p><div className="product-bottom"><a href="#contato">{text.productCta}<ArrowRight size={15} /></a></div></CardContent></Card></Reveal>)}</div>
         </div>
       </section>
 
@@ -690,7 +694,7 @@ export function SolutionsHome() {
       </section>
 
       <section id="contato" className="contact-section" aria-labelledby="contact-title">
-        <div className="contact-orb" aria-hidden="true" /><div className="page-shell contact-shell"><Reveal><p className="section-kicker">{text.contactKicker}</p><h2 id="contact-title">{text.contactTitle}</h2></Reveal><Reveal className="contact-content"><p>{text.contactText}</p><div className="contact-actions"><Button asChild size="lg" className="button-contact"><a href="mailto:carlos@codebycarlos.dev">{text.contactCta}<ArrowUpRight /></a></Button><Button asChild variant="outline" size="lg" className="button-contact-secondary"><a href="https://www.linkedin.com/in/lc-henrique" target="_blank" rel="noreferrer"><MessageCircle />{text.contactSecondary}</a></Button></div></Reveal><footer className="site-footer"><div><Mark /><span>code by carlos</span></div><span>{text.footer}</span><span>© {new Date().getFullYear()} Carlos Henrique</span></footer></div>
+        <div className="contact-orb" aria-hidden="true" /><div className="page-shell contact-shell"><Reveal><p className="section-kicker">{text.contactKicker}</p><h2 id="contact-title">{text.contactTitle}</h2></Reveal><Reveal className="contact-content"><p>{text.contactText}</p><ContactForm locale={locale} /><div className="contact-actions"><Button asChild size="lg" className="button-contact"><a href="mailto:carlos@codebycarlos.dev">{text.contactCta}<ArrowUpRight /></a></Button><Button asChild variant="outline" size="lg" className="button-contact-secondary"><a href="https://www.linkedin.com/in/lc-henrique" target="_blank" rel="noreferrer"><MessageCircle />{text.contactSecondary}</a></Button></div></Reveal><footer className="site-footer"><div><Mark /><span>code by carlos</span></div><span>{text.footer}</span><span>© {new Date().getFullYear()} Carlos Henrique · <a className="footer-privacy" href="/privacidade">{pt ? "Privacidade" : "Privacy"}</a></span></footer></div>
       </section>
     </main>
   );

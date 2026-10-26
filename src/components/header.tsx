@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, Moon, Sun, X, ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -11,13 +12,14 @@ import { useSiteSettings } from "@/lib/site-settings";
 const sectionIds = ["servicos", "cases", "processo", "produtos", "contato"];
 
 export function Header() {
+  const pathname = usePathname();
   const { locale, theme, toggleLocale, toggleTheme } = useSiteSettings();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const pt = locale === "pt";
   const links = pt
-    ? [["servicos", "Serviços"], ["cases", "Cases"], ["processo", "Como funciona"], ["produtos", "Produtos"], ["contato", "Contato"]]
+    ? [["servicos", "Serviços"], ["cases", "Cases"], ["processo", "Como funciona"], ["produtos", "Pacotes"], ["contato", "Contato"]]
     : [["servicos", "Services"], ["cases", "Case studies"], ["processo", "How it works"], ["produtos", "Products"], ["contato", "Contact"]];
 
   useEffect(() => {
@@ -45,6 +47,7 @@ export function Header() {
   }, [open]);
 
   const goTo = (id: string) => {
+    if (pathname !== "/") { window.location.assign(id === "home" ? "/" : "/#" + id); setOpen(false); return; }
     const target = id === "home" ? null : document.getElementById(id);
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     if (!target) window.scrollTo({ top: 0, behavior });
@@ -52,6 +55,8 @@ export function Header() {
     window.history.replaceState(null, "", id === "home" ? "/" : `#${id}`);
     setOpen(false);
   };
+
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <header className={cn("site-header", scrolled && "is-scrolled")}>
@@ -69,7 +74,7 @@ export function Header() {
           <span className="header-status"><i />{pt ? "Disponível" : "Available"}</span>
           <Button type="button" variant="ghost" size="icon" className="header-icon-button" onClick={toggleLocale} aria-label={pt ? "Mudar para inglês" : "Mudar para português"}><span className="locale-label">{pt ? "EN" : "PT"}</span></Button>
           <Button type="button" variant="ghost" size="icon" className="header-icon-button theme-button" onClick={toggleTheme} aria-label={theme === "dark" ? (pt ? "Usar tema claro" : "Use light theme") : (pt ? "Usar tema escuro" : "Use dark theme")}>{theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}</Button>
-          <Button asChild size="sm" className="header-cta"><a href="#contato">{pt ? "Começar" : "Start"}<ArrowUpRight /></a></Button>
+          <Button asChild size="sm" className="header-cta"><a href={pathname === "/" ? "#contato" : "/#contato"}>{pt ? "Pedir orçamento" : "Get a quote"}<ArrowUpRight /></a></Button>
           <Button type="button" variant="ghost" size="icon" className="mobile-menu-button" onClick={() => setOpen((value) => !value)} aria-label={open ? (pt ? "Fechar menu" : "Close menu") : (pt ? "Abrir menu" : "Open menu")} aria-expanded={open}>{open ? <X size={21} /> : <Menu size={21} />}</Button>
         </div>
       </div>

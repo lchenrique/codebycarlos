@@ -1,11 +1,13 @@
 
 import { Resend } from 'resend';
 import { z } from 'zod';
+import { sameOrigin } from '@/lib/admin-auth';
 
 const contactSchema = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(160),
   message: z.string().trim().min(10).max(4000),
+  website: z.string().max(0).optional(),
 });
 
 const escapeHtml = (value: string) => value.replace(/[&<>'"]/g, (character) => ({
@@ -16,13 +18,25 @@ const escapeHtml = (value: string) => value.replace(/[&<>'"]/g, (character) => (
   '"': '&quot;',
 })[character] ?? character);
 
+const submissionRate = new Map<string, { at: number; count: number }>();
+
 export async function POST(request: Request) {
   try {
+    if (!sameOrigin(request)) return Response.json({ error: 'Origem inválida.' }, { status: 403 });
     const payload = contactSchema.safeParse(await request.json());
     if (!payload.success) {
       return Response.json({ error: 'Invalid contact details.' }, { status: 400 });
     }
 
+    const ip = request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
+    const now = Date.now();
+    const previous = submissionRate.get(ip);
+    if (previous && now - previous.at < 900000 && previous.count >= 3) {
+      return Response.json({ error: "Muitas tentativas. Tente mais tarde." }, { status: 429 });
+    }
+    if (previous && now - previous.at < 900000) previous.count++;
+    else submissionRate.set(ip, { at: now, count: 1 });
+    if (submissionRate.size > 2000) for (const [key, value] of submissionRate) if (now - value.at > 900000) submissionRate.delete(key);
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
       return Response.json({ error: 'Contact service unavailable.' }, { status: 503 });

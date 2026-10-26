@@ -23,15 +23,15 @@ const HeroObject = dynamic(() => import("@/components/hero-object").then((module
 const heroCopy = {
   pt: {
     available: "Agenda aberta para novos projetos",
-    eyebrow: "Estúdio digital independente",
-    lead: "Seu próximo",
-    words: ["avanço", "site", "sistema", "produto"],
-    tail: "começa aqui.",
-    body: "Sites que vendem, sistemas que organizam e automações que devolvem tempo para o seu negócio.",
-    primary: "Falar sobre meu projeto",
-    secondary: "Conhecer soluções",
-    meta: "Atendimento remoto · Brasil e mundo",
-    reply: "Resposta em até 24h",
+    eyebrow: "Sites, sistemas e automações sob medida",
+    lead: "Seu negócio" ,
+    words: ["vende mais", "ganha tempo", "fica online", "cresce"],
+    tail: "com tecnologia.",
+    body: "Crio sites profissionais, sistemas sob medida e automações para pequenos negócios e empresas. Você fala diretamente comigo, do planejamento até a entrega.",
+    primary: "Pedir um orçamento",
+    secondary: "Ver o que faço",
+    meta: "Atendimento online · Todo o Brasil",
+    reply: "Atendimento direto com o desenvolvedor",
     role: "Carlos Henrique · fundador",
     seal: "código próprio, sem terceirização",
     stageLabel: "Objeto 3D decorativo do estúdio",
@@ -39,7 +39,7 @@ const heroCopy = {
     captionNote: "estratégia, design e código em um só núcleo",
     scroll: "role para conhecer",
     metricsLabel: "Números da experiência",
-    metrics: ["anos construindo", "produtos entregues", "código proprietário"],
+    metrics: ["anos de experiência", "projetos no portfólio", "atendimento direto"],
     marquee: [
       "Landing pages",
       "Dashboards",
@@ -86,7 +86,7 @@ const heroCopy = {
 const metricIcons = [Users, TrendingUp, ShieldCheck];
 const metricValues = [
   { value: 6, suffix: "+", pad: true },
-  { value: 20, suffix: "+", pad: false },
+  { value: 10, suffix: "+", pad: false },
   { value: 100, suffix: "%", pad: false },
 ];
 

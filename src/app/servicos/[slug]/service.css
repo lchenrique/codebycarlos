@@ -1,0 +1,40 @@
+.service-detail{background:#f4f4ef;color:#202620;font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+.service-detail *{box-sizing:border-box}
+.service-detail a{text-decoration:none}
+.service-detail__shell{max-width:1210px;margin:0 auto;padding:0 28px}
+.service-detail__hero{background:radial-gradient(ellipse at 90% 20%,rgba(193,242,114,.17),transparent 45%),#111b20;color:#f3f9f1;padding:clamp(130px,13vw,210px) 0 clamp(72px,8vw,124px)}
+.service-detail__breadcrumb{display:flex;gap:12px;align-items:center;color:#b7c2bf;font-size:13px;margin-bottom:54px}
+.service-detail__breadcrumb a{color:inherit;text-decoration:underline;text-underline-offset:4px}
+.service-detail__eyebrow{display:block;color:#73914b;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px}
+.service-detail__hero .service-detail__eyebrow,.service-detail__section--dark .service-detail__eyebrow{color:#c7f27b}
+.service-detail h1{font-size:clamp(42px,6.6vw,94px);font-weight:800;letter-spacing:-.055em;line-height:1.05;max-width:1000px;margin:0 0 34px}
+.service-detail__hero p{max-width:740px;font-size:clamp(17px,2vw,22px);line-height:1.65;color:#c7d1cd;margin:0 0 34px}
+.service-detail__cta{display:inline-flex;align-items:center;gap:18px;border-radius:999px;background:#c4ef7a;color:#142016!important;padding:17px 25px;font-size:15px;font-weight:800}
+.service-detail__mini{display:block;margin-top:17px;font-size:12px;color:#a9bcb2}
+.service-detail__section{padding:clamp(76px,8vw,130px) 0}
+.service-detail h2{font-size:clamp(31px,4vw,58px);line-height:1.1;letter-spacing:-.045em;max-width:680px;font-weight:750;margin:0 0 22px}
+.service-detail__section p{color:#576057;max-width:560px;font-size:17px;line-height:1.7}
+.service-detail__columns{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,7vw,110px)}
+.service-detail__benefits{list-style:none;display:flex;flex-direction:column;gap:10px;padding:0;margin:0}
+.service-detail__benefits li{display:flex;align-items:flex-start;gap:15px;padding:20px 0;border-bottom:1px solid #ccd1c8;font-size:17px;font-weight:600}
+.service-detail__benefits svg{color:#749c3d;flex-shrink:0;margin-top:3px}
+.service-detail__section--dark{background:#1b2830;color:#eff5f1}
+.service-detail__cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.service-detail__cards article{background:#28363e;border:1px solid #3c4c54;border-radius:20px;padding:28px;min-height:230px}
+.service-detail__cards article>span{color:#c4ef7a;font-size:13px}
+.service-detail__cards h3{margin:32px 0 13px;font-size:23px;font-weight:700}
+.service-detail__cards p{color:#b9c8bf;font-size:15px;margin:0}
+.service-detail__faq{max-width:940px;margin-top:34px;border-top:1px solid #c8cec6}
+.service-detail__faq details{border-bottom:1px solid #c8cec6;padding:23px 0}
+.service-detail__faq summary{cursor:pointer;display:flex;gap:15px;align-items:center;font-weight:700;font-size:17px;list-style:none}
+.service-detail__faq summary::-webkit-details-marker{display:none}
+.service-detail__faq summary svg{color:#73914b;flex-shrink:0}
+.service-detail__faq p{padding-left:33px;max-width:780px}
+.service-detail__final{background:#cbef87;padding:clamp(70px,8vw,120px) 0}
+.service-detail__final h2{max-width:900px}
+.service-detail__final p{font-size:18px;margin-bottom:28px}
+.service-detail__final .service-detail__cta{background:#172621;color:white!important}
+.service-detail__back{display:block;width:max-content;margin-top:28px;color:#263b20;text-decoration:underline!important;text-underline-offset:4px}
+.panel-foot .service-detail-link{background:transparent;border:0;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:800px){.service-detail__columns,.service-detail__cards{grid-template-columns:1fr}.service-detail__cards article{min-height:150px}.service-detail__cards h3{margin-top:20px}}
+@media(max-width:550px){.service-detail__shell{padding:0 20px}.service-detail__hero{padding-top:150px}.service-detail__breadcrumb{margin-bottom:40px}.service-detail__hero p{font-size:17px}}
