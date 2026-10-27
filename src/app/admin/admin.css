@@ -45,3 +45,18 @@
 .admin-top button:disabled,.admin-login button:disabled{opacity:.5;cursor:wait}
 @media(max-width:900px){.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-grid{grid-template-columns:1fr}}
 @media(max-width:540px){.admin-surface{padding:22px 14px}.admin-top{flex-wrap:wrap}.admin-stats{gap:9px}.admin-stat,.admin-panel{padding:17px}.admin-stat strong{font-size:28px}.admin-stat small{font-size:11px}.admin-chart{height:170px}.admin-grid{gap:12px}}
+
+.admin-config-layout{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.admin-config-card{display:flex;flex-direction:column;gap:17px}
+.admin-config-card h2{margin:0}
+.admin-config-note{color:var(--admin-sub);font-size:13px;line-height:1.6;margin:0}
+.admin-config-field{display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600}
+.admin-config-field input,.admin-config-field textarea{display:block;width:100%;min-width:0;border:1px solid #536372;border-radius:11px;background:#0a1016;color:#fff;font:inherit;font-size:14px;font-weight:400;padding:13px 15px;outline-offset:3px;resize:vertical}
+.admin-config-field small{color:var(--admin-sub);font-size:12px;font-weight:400}
+.admin-config-preview{display:inline-flex;align-self:flex-start;border:1px solid var(--admin-edge);border-radius:10px;padding:10px 14px;font-size:13px}
+.admin-config-save{grid-column:1/-1;display:flex;gap:20px;justify-content:space-between;align-items:center;border:1px solid var(--admin-edge);background:var(--admin-card);border-radius:18px;padding:20px 24px}
+.admin-config-save button{border:none;background:#c0eb6d;color:#111b1c;font-weight:700;border-radius:11px;padding:14px 20px;cursor:pointer;flex-shrink:0}
+.admin-config-save button:disabled{opacity:.5;cursor:not-allowed}
+.admin-config-success{color:#c0eb6d;font-size:14px;line-height:1.6}
+.admin-config-error{color:#ff9c9c;font-size:14px;line-height:1.6}
+@media(max-width:800px){.admin-config-layout{grid-template-columns:1fr}.admin-config-save{align-items:stretch;flex-direction:column}.admin-config-save button{width:100%}}

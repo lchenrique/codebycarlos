@@ -48,6 +48,10 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <div><Link href="/" className="admin-back">← Voltar ao site</Link><span className="admin-kicker">Code by Carlos · crescimento</span><h1>Painel de visitas</h1><p>Entenda quem chega ao site e quais ações geram oportunidades.</p></div>
       <AdminLogout />
     </header>
+    <nav className="admin-filters" aria-label="Navegação do painel">
+      <Link href="/admin" aria-current="page">Estatísticas</Link>
+      <Link href="/admin/configuracoes">Configurações</Link>
+    </nav>
     <nav className="admin-filters" aria-label="Período">
       {[7, 30, 90].map((day) => <a key={day} href={"/admin?days=" + day} aria-current={days === day ? "page" : undefined}>{day} dias</a>)}
     </nav>
