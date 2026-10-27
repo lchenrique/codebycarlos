@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import Image from "next/image";
+import { ArrowRight, ArrowUpRight, LogOut } from "lucide-react";
 
 export function AdminLogin() {
   const router = useRouter();
@@ -26,24 +28,25 @@ export function AdminLogin() {
   }
 
   return <form className="admin-login" onSubmit={submit}>
-    <span className="admin-kicker">Área reservada</span>
-    <h1>Visão do seu site</h1>
-    <p>Acompanhe o tráfego e os contatos gerados pelo Code by Carlos.</p>
+    <div className="admin-login__brand"><Image src="/logo.svg" width={29} height={29} alt="" /> code<span>by</span>carlos</div>
+    <span className="admin-login__eyebrow">BACKOFFICE / ACESSO PRIVADO</span>
+    <h1>Seu espaço<br />de controle<span style={{ color: "var(--a-acid)" }}>.</span></h1>
+    <p>O que acontece no seu site, em um único lugar. Entre para acompanhar as métricas e fazer ajustes.</p>
     <label htmlFor="admin-password">Senha de acesso</label>
     <input id="admin-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required autoFocus />
     {error && <p role="alert" className="admin-error">{error}</p>}
-    <button type="submit" disabled={busy}>{busy ? "Entrando…" : "Entrar no painel"}</button>
-    <Link href="/">← Voltar ao site</Link>
+    <button type="submit" disabled={busy}>{busy ? "Entrando…" : "Entrar no painel"} <ArrowRight size={17} style={{ verticalAlign: "middle", marginLeft: 7 }} /></button>
+    <Link href="/">Voltar ao site <ArrowUpRight size={14} style={{ verticalAlign: "middle", marginLeft: 3 }} /></Link>
   </form>;
 }
 
 export function AdminLogout() {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
-  return <button disabled={busy} onClick={async () => {
+  return <button type="button" className="admin-logout" disabled={busy} onClick={async () => {
     setBusy(true);
     await fetch("/api/admin/logout", { method: "POST" });
     router.refresh();
     setBusy(false);
-  }}>Sair <span aria-hidden>↗</span></button>;
+  }}><span><LogOut size={15} style={{ display: "inline", verticalAlign: "middle", marginRight: 9 }} /> Sair do painel</span><ArrowUpRight size={15} aria-hidden="true" /></button>;
 }
