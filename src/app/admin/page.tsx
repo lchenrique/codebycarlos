@@ -42,7 +42,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     return dailyMap.get(date) || { day: date, views: 0, visitors: 0, contacts: 0, leads: 0 };
   });
   const max = Math.max(1, ...series.map((d) => d.views));
-  const rate = totals.visitors ? ((totals.contacts + totals.leads) / totals.visitors * 100).toFixed(1).replace(".", ",") + "%" : "0%";
+  const rate = totals.visitors ? (totals.contacts / totals.visitors * 100).toFixed(1).replace(".", ",") + "%" : "0%";
   return <main className="admin-surface admin-dashboard">
     <header className="admin-top">
       <div><Link href="/" className="admin-back">← Voltar ao site</Link><span className="admin-kicker">Code by Carlos · crescimento</span><h1>Painel de visitas</h1><p>Entenda quem chega ao site e quais ações geram oportunidades.</p></div>
@@ -56,8 +56,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <Stat label="Visitantes estimados" value={totals.visitors} note="Identificadores únicos (não pessoas verificadas)" />
       <Stat label="Interesse em orçamento" value={totals.ctas} note="Cliques que levam à seção de contato" />
       <Stat label="Contatos iniciados" value={totals.contacts} note="Cliques em e-mail ou WhatsApp" />
-      <Stat label="Mensagens enviadas" value={totals.leads} note="Formulários com envio confirmado" />
-      <Stat label="Interações por visitante" value={rate} note="(Contatos + mensagens) ÷ visitantes" />
+      <Stat label="Taxa de cliques em contato" value={rate} note="Cliques em contato ÷ visitantes estimados" />
     </div>
     <section className="admin-panel admin-chart-panel">
       <div className="admin-panel-heading"><h2>Evolução das visitas</h2><span>Últimos {days} dias</span></div>

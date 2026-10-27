@@ -34,7 +34,6 @@ import medtimePulseProduct from "@/assets/portfolio/product-showcase/medtime-pul
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SolutionsHero } from "@/components/solutions-hero";
-import { ContactForm } from "@/components/contact-form";
 import {
   Card,
   CardContent,
@@ -154,7 +153,7 @@ const copy = {
     contactTitle: "Vamos conversar sobre sua ideia?",
     contactText:
       "Não precisa ter um briefing pronto. Conte o que você quer melhorar ou construir, e conversamos sobre a melhor solução.",
-    contactCta: "carlos@codebycarlos.dev",
+    contactCta: "Conversar no WhatsApp",
     contactSecondary: "Ver LinkedIn",
     footer: "Sites · Sistemas · Automações · Produtos digitais",
     menu: "Menu",
@@ -208,7 +207,7 @@ const copy = {
     contactKicker: "06 / Let's talk",
     contactTitle: "Tell me what you need. I will think through the path.",
     contactText: "Send a message with context, goal and timing. I will reply with focused questions and a clear next step.",
-    contactCta: "carlos@codebycarlos.dev",
+    contactCta: "Chat on WhatsApp",
     contactSecondary: "View LinkedIn",
     footer: "Websites · Systems · Automations · Digital products",
     menu: "Menu",
@@ -360,6 +359,7 @@ export function SolutionsHome() {
   const { locale } = useSiteSettings();
   const text: LocaleCopy = copy[locale];
   const pt = locale === "pt";
+  const whatsappUrl = "https://wa.me/5521981685736?text=" + encodeURIComponent(pt ? "Olá, Carlos! Vim pelo seu site e gostaria de conversar sobre um projeto." : "Hi Carlos! I found your website and would like to discuss a project.");
   const [activeService, setActiveService] = useState(0);
   const [activeCase, setActiveCase] = useState(0);
   const siteRef = useRef<HTMLElement>(null);
@@ -694,7 +694,7 @@ export function SolutionsHome() {
       </section>
 
       <section id="contato" className="contact-section" aria-labelledby="contact-title">
-        <div className="contact-orb" aria-hidden="true" /><div className="page-shell contact-shell"><Reveal><p className="section-kicker">{text.contactKicker}</p><h2 id="contact-title">{text.contactTitle}</h2></Reveal><Reveal className="contact-content"><p>{text.contactText}</p><ContactForm locale={locale} /><div className="contact-actions"><Button asChild size="lg" className="button-contact"><a href="mailto:carlos@codebycarlos.dev">{text.contactCta}<ArrowUpRight /></a></Button><Button asChild variant="outline" size="lg" className="button-contact-secondary"><a href="https://www.linkedin.com/in/lc-henrique" target="_blank" rel="noreferrer"><MessageCircle />{text.contactSecondary}</a></Button></div></Reveal><footer className="site-footer"><div><Mark /><span>code by carlos</span></div><span>{text.footer}</span><span>© {new Date().getFullYear()} Carlos Henrique · <a className="footer-privacy" href="/privacidade">{pt ? "Privacidade" : "Privacy"}</a></span></footer></div>
+        <div className="contact-orb" aria-hidden="true" /><div className="page-shell contact-shell"><Reveal><p className="section-kicker">{text.contactKicker}</p><h2 id="contact-title">{text.contactTitle}</h2></Reveal><Reveal className="contact-content"><p>{text.contactText}</p><div className="contact-actions"><Button asChild size="lg" className="button-contact"><a href={whatsappUrl} target="_blank" rel="noopener noreferrer" data-track="WhatsApp · Pedir orçamento"><MessageCircle size={20} />{text.contactCta}<ArrowUpRight size={18} /></a></Button><Button asChild variant="outline" size="lg" className="button-contact-secondary"><a href="https://www.linkedin.com/in/lc-henrique" target="_blank" rel="noreferrer"><MessageCircle />{text.contactSecondary}</a></Button></div></Reveal><footer className="site-footer"><div><Mark /><span>code by carlos</span></div><span>{text.footer}</span><span>© {new Date().getFullYear()} Carlos Henrique · <a className="footer-privacy" href="/privacidade">{pt ? "Privacidade" : "Privacy"}</a></span></footer></div>
       </section>
     </main>
   );
